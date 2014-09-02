@@ -60,7 +60,7 @@ module.exports = function(grunt) {
       files: ['Gruntfile.js', 'js/*.js', 'data-processing/*.js']
     },
 
-    
+
     // Compass is an extended SASS.  Set it up so that it generates to .tmp/
     compass: {
       options: {
@@ -89,7 +89,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
 
     // Copy relevant files over to distribution
     copy: {
@@ -185,7 +185,7 @@ module.exports = function(grunt) {
       // CSS
       css: {
         src: [
-          
+
           '<%= compass.dist.options.cssDir %>/main.css'
         ],
         dest: 'dist/<%= pkg.name %>.<%= pkg.version %>.css'
@@ -311,11 +311,16 @@ module.exports = function(grunt) {
       }
     },
     // HTTP Server
-    connect: {
-      server: {
-        options: {
-          port: 8867
-        }
+    browserSync: {
+      bsFiles: {
+        src: ['<%= jshint.files %>', 'js/templates/**/*', '.tmp/**/*.css']
+      },
+      options: {
+        server: {
+          baseDir: './'
+        },
+        watchTask: true,
+        port: 8842
       }
     },
     // Watches files for changes and performs task
@@ -333,9 +338,9 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-browser-sync');
   grunt.loadNpmTasks('grunt-s3');
 
   // Custom task to output embed code when deploy is run, if the project is Inline
@@ -351,10 +356,9 @@ module.exports = function(grunt) {
   grunt.registerTask('default', ['jshint', 'compass:dist', 'clean', 'copy', 'requirejs', 'concat', 'cssmin', 'uglify']);
 
   // Watch tasks
-  
   grunt.registerTask('watcher', ['jshint', 'compass:dev']);
-  grunt.registerTask('server', ['jshint', 'compass:dev', 'connect', 'watch']);
-  
+  grunt.registerTask('server', ['jshint', 'compass:dev', 'browserSync', 'watch']);
+
 
   // Deploy tasks
   grunt.registerTask('deploy', ['s3', 'inline_embed:minnpost-pvi-map-2014']);

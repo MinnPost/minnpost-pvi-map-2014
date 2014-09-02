@@ -8,7 +8,7 @@ You can see this project in action at *[published story link goes here]()*.
 
 ## Data
 
-Data created mannually and stored at `original/pvi-cartogram-data.csv`.  INSERT PVI EXPLANATION HERE.
+Data created manually and stored at `original/pvi-cartogram-data.csv`.  INSERT PVI EXPLANATION HERE.
 
 ## Development and running locally
 
