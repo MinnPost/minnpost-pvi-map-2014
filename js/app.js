@@ -7,17 +7,12 @@
 
 // Create main application
 define('minnpost-pvi-map-2014', [
-  'jquery', 'underscore', 'ractive', 'ractive-events-tap', 'mpConfig', 'mpFormatters', 
-  'helpers',
-  
-  
+  'jquery', 'underscore', 'ractive', 'ractive-events-tap',
+  'mpConfig', 'mpFormatters', 'helpers',
   'text!templates/application.mustache'
 ], function(
-  $, _, Ractive, RactiveEventsTap, mpConfig, mpFormatters, 
-  helpers,
-  
-  
-  tApplication
+  $, _, Ractive, RactiveEventsTap, mpConfig, mpFormatters,
+  helpers, tApplication
   ) {
 
   // Constructor for app
@@ -26,7 +21,6 @@ define('minnpost-pvi-map-2014', [
     this.el = this.options.el;
     this.$el = $(this.el);
     this.$ = function(selector) { return this.$el.find(selector); };
-    this.$content = this.$el.find('.content-container');
     this.loadApp();
   };
 
@@ -36,45 +30,19 @@ define('minnpost-pvi-map-2014', [
     start: function() {
       var thisApp = this;
 
-      
       // Create main application view
       this.mainView = new Ractive({
         el: this.$el,
         template: tApplication,
         data: {
+
         },
         partials: {
+
         }
       });
-      
-
-      
-      // Run examples.  Please remove for real application.
-      //
-      // Because of how Ractive initializes and how Highcharts work
-      // there is an inconsitency of when the container for the chart
-      // is ready and when highcharts loads the chart.  So, we put a bit of
-      // of a pause.
-      //
-      // In production, intializing a chart should be tied to data which
-      // can be used with a Ractive observer.
-      //
-      // This should not happen with underscore templates.
-      _.delay(function() { thisApp.makeExamples(); }, 400);
-      
     },
 
-    
-    // Make some example depending on what parts were asked for in the
-    // templating process.  Remove, rename, or alter this.
-    makeExamples: function() {
-      
-
-      
-
-      
-    },
-    
 
     // Default options
     defaultOptions: {
@@ -83,7 +51,6 @@ define('minnpost-pvi-map-2014', [
       el: '.minnpost-pvi-map-2014-container',
       availablePaths: {
         local: {
-          
           css: ['.tmp/css/main.css'],
           images: 'images/',
           data: 'data/'
