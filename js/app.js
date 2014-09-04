@@ -7,13 +7,14 @@
 
 // Create main application
 define('minnpost-pvi-map-2014', [
-  'jquery', 'underscore', 'ractive', 'ractive-events-tap',
+  'jquery', 'underscore', 'chroma',
+  'ractive', 'ractive-events-tap', 'ractive-transitions-fade',
   'mpConfig', 'mpFormatters', 'helpers',
   'text!templates/application.mustache',
   'text!../data/district-arrangement.json',
   'text!../data/pvi-districts.json',
 ], function(
-  $, _, Ractive, RactiveEventsTap, mpConfig, mpFormatters,
+  $, _, chroma, Ractive, RactiveEventsTap, RactiveTransitionsFade, mpConfig, mpFormatters,
   helpers, tApplication, dArrangement, dPVI
   ) {
 
@@ -36,11 +37,18 @@ define('minnpost-pvi-map-2014', [
     start: function() {
       var thisApp = this;
       var arrangements = {};
+      var colorPoints = ['#0793AB', 'FFFFFF', '#A1000F'];
+      var pviPoints = [-20, 20];
+      var cRange;
 
       // Some data manipulation
       _.each(dArrangement, function(d, di) {
         arrangements[mpFormatters.padLeft(d[0]) + mpFormatters.padLeft(d[1])] = d[2];
       });
+
+      // Color range
+      cRange = chroma.scale(colorPoints).mode('hsl')
+        .domain(pviPoints, 8);
 
       // Create main application view
       this.mainView = new Ractive({
@@ -51,14 +59,36 @@ define('minnpost-pvi-map-2014', [
           aRows: _.range(_.max(dArrangement, function(d, di) { return d[1]; })[1] + 1),
           aColumns: _.range(_.max(dArrangement, function(d, di) { return d[0]; })[0] + 1),
           p: dPVI,
-          f: mpFormatters
+          r: cRange,
+          rc: cRange.colors(),
+          rd: cRange.domain(),
+          f: mpFormatters,
+          fg: this.makeFGColor
         },
         partials: {
 
         }
       });
+
+      // Handle events
+      this.mainView.on('selectDistrict', function(e, district) {
+        e.original.preventDefault();
+        var thisView = this;
+
+        if (_.isObject(dPVI[district])) {
+          this.set('district', undefined).then(function() {
+            thisView.set('district', dPVI[district]);
+          });
+        }
+      });
     },
 
+    // Given a color, figure out the best foreground color
+    // for text
+    makeFGColor: function(bg) {
+      var l = chroma(bg).luminance();
+      return (l < 0.5) ? '#FFFFFF' : '#222222';
+    },
 
     // Default options
     defaultOptions: {

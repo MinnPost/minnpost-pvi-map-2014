@@ -4,13 +4,11 @@
  */
 require.config({
   shim: {
-    
-    
-    
+
   },
   baseUrl: 'js',
   paths: {
-    
+
     'requirejs': '../bower_components/requirejs/require',
     'almond': '../bower_components/almond/almond',
     'text': '../bower_components/text/text',
@@ -18,6 +16,8 @@ require.config({
     'underscore': '../bower_components/underscore/underscore',
     'ractive': '../bower_components/ractive/ractive',
     'ractive-events-tap': '../bower_components/ractive-events-tap/ractive-events-tap',
+    'ractive-transitions-fade': '../bower_components/ractive-transitions-fade/ractive-transitions-fade',
+    'chroma': '../bower_components/chroma-js/chroma',
     'mpConfig': '../bower_components/minnpost-styles/dist/minnpost-styles.config',
     'mpFormatters': '../bower_components/minnpost-styles/dist/minnpost-styles.formatters',
     'minnpost-pvi-map-2014': 'app'

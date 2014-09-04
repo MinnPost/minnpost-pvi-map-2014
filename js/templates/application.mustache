@@ -3,14 +3,21 @@
 
   <div class="content-container">
     <div class="row">
-      <div class="column-medium-50">
+      <div class="column-medium-66">
         <table class="arrangement">
           <tbody>
             {{#aRows:ar}}
               <tr>
                 {{#aColumns:ac}}
                   <td>
-                    <div class="grid {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}">
+                    <div
+                      on-tap="selectDistrict:{{ a[f.padLeft(ac) + f.padLeft(ar)] }}"
+                      class="grid {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}"
+                      style="
+                        background-color: {{ r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex() }};
+                        color: {{ fg(r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex()) }};
+                      "
+                      title="{{ p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14 }}">
                       {{ a[f.padLeft(ac) + f.padLeft(ar)] }}
                     </div>
                   </td>
@@ -19,10 +26,49 @@
             {{/aRows}}
           </tbody>
         </table>
+
+        <div class="legend">
+          {{#rc:i}}
+            <div class="legend-item">
+              <div class="legend-item-color" style="background-color: {{ this }};"></div>
+
+              <div class="legend-item-text">
+                {{ rd[i] }} - {{ rd[i + 1] }}
+              </div>
+            </div>
+          {{/rc}}
+        </div>
       </div>
 
-      <div class="column-medium-50">
+      <div class="column-medium-33">
+        {{#district}}
+          <div class="district-display" intro="fade" outro="fade">
+            <h3>District {{ district['District'] }}</h3>
 
+            <table class="striped">
+              <tbody>
+                <tr><td>PVI</td><td>{{ district['PVI14'] }}</td></tr>
+                <tr><td>2012 Margin</td><td>{{ district['margin12'] }}</td></tr>
+                <tr>
+                  <td>Incumbent</td>
+                  <td>{{ district['Incumbent'] }} ({{ district['Incumbent Party'] }})</td>
+                </tr>
+                <tr>
+                  <td>Challenger 1</td>
+                  <td>{{ district['Challenger 1'] }} ({{ district['Challenger 1 Party'] }})</td>
+                </tr>
+                <tr>
+                  <td>Challenger 2</td>
+                  <td>{{ district['Challenger 2'] }} ({{ district['Challenger 2 Party'] }})</td>
+                </tr>
+                <tr>
+                  <td>Challenger 3</td>
+                  <td>{{ district['Challenger 3'] }} ({{ district['Challenger 3 Party'] }})</td>
+                </tr>
+              </tbody>
+            </tdead>
+          </div>
+        {{/district}}
       </div>
     </div>
 
@@ -30,7 +76,7 @@
 
   <div class="footnote-container">
     <div class="footnote">
-      <p>Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-pvi-map-2014" target="_blank">Github</a>.</p>
+      <p>Some code, techniques, and data on <a href="https://gitdub.com/minnpost/minnpost-pvi-map-2014" target="_blank">Gitdub</a>.</p>
 
     </div>
   </div>

@@ -15,10 +15,13 @@ body .node-unpublished {
 .mp .minnpost-pvi-map-2014-container {
 
   .application-container {
-    padding-top: 1em;
+    padding-top: 3em;
   }
 
   table.arrangement {
+    margin-bottom: 3em;
+    width: auto;
+
     tr, td {
       margin: 0;
       padding: 0;
@@ -31,14 +34,33 @@ body .node-unpublished {
     }
 
     .grid {
-      width: 25px;
-      height: 25px;
-      font-size: 12px;
+      width: 27px;
+      height: 27px;
+      font-size: 10px;
       line-height: 24px;
       border-radius: 3px;
 
       &.has-value {
         background-color: #BDBDBD;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .legend {
+    text-align: center;
+
+    .legend-item {
+      display: inline-block;
+      width: 10%;
+      padding: 3px;
+
+      .legend-item-color {
+        height: 0.5em;
+      }
+
+      .legend-item-text {
+        font-size: 0.75em;
       }
     }
   }
