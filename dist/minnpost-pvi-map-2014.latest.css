@@ -24,19 +24,21 @@ body .node-unpublished {
   border: none;
   text-align: center;
 }
-.mp .minnpost-pvi-map-2014-container table.arrangement td {
-  padding: 2px;
-}
 .mp .minnpost-pvi-map-2014-container table.arrangement .grid {
-  width: 27px;
-  height: 27px;
-  font-size: 10px;
-  line-height: 24px;
-  border-radius: 3px;
+  border: 2px solid #FFFFFF;
+  border-radius: 4px;
 }
 .mp .minnpost-pvi-map-2014-container table.arrangement .grid.has-value {
   background-color: #BDBDBD;
   cursor: pointer;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid.active {
+  border: 2px solid #282828;
+  border-radius: 3px;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement .place-labels td {
+  padding-top: 0.85em;
+  font-size: 1.15em;
 }
 .mp .minnpost-pvi-map-2014-container .legend {
   text-align: center;
@@ -51,4 +53,7 @@ body .node-unpublished {
 }
 .mp .minnpost-pvi-map-2014-container .legend .legend-item .legend-item-text {
   font-size: 0.75em;
+}
+.mp .minnpost-pvi-map-2014-container .district-display .map {
+  height: 10em;
 }
