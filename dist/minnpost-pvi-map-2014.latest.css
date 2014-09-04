@@ -1,0 +1,54 @@
+/**
+ * Styles for: minnpost-pvi-map-2014
+ */
+/**
+ * Mixins for: minnpost-pvi-map-2014
+ */
+/**
+ * Main styles for: minnpost-pvi-map-2014
+ */
+body .node-unpublished {
+  background-repeat: no-repeat;
+}
+
+.mp .minnpost-pvi-map-2014-container .application-container {
+  padding-top: 3em;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement {
+  margin-bottom: 3em;
+  width: auto;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement tr, .mp .minnpost-pvi-map-2014-container table.arrangement td {
+  margin: 0;
+  padding: 0;
+  border: none;
+  text-align: center;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement td {
+  padding: 2px;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid {
+  width: 27px;
+  height: 27px;
+  font-size: 10px;
+  line-height: 24px;
+  border-radius: 3px;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid.has-value {
+  background-color: #BDBDBD;
+  cursor: pointer;
+}
+.mp .minnpost-pvi-map-2014-container .legend {
+  text-align: center;
+}
+.mp .minnpost-pvi-map-2014-container .legend .legend-item {
+  display: inline-block;
+  width: 10%;
+  padding: 3px;
+}
+.mp .minnpost-pvi-map-2014-container .legend .legend-item .legend-item-color {
+  height: 0.5em;
+}
+.mp .minnpost-pvi-map-2014-container .legend .legend-item .legend-item-text {
+  font-size: 0.75em;
+}

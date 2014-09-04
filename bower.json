@@ -72,6 +72,20 @@
       ],
       "returns": "RactiveEventsTap"
     },
+    "ractive-transitions-fade": {
+      "rname": "ractive-transitions-fade",
+      "js": [
+        "ractive-transitions-fade/ractive-transitions-fade"
+      ],
+      "returns": "RactiveTransitionsFade"
+    },
+    "chroma-js": {
+      "rname": "chroma",
+      "js": [
+        "ractive-transitions-fade/ractive-transitions-fade"
+      ],
+      "returns": "chroma"
+    },
     "minnpost-styles": {
       "rname": "mpStyles",
       "css": [
