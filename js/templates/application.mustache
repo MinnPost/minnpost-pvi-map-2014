@@ -24,7 +24,7 @@
                         font-size: {{ gs * 0.3 }}px;
                         line-height: {{ gs * 0.9 }}px;
                       "
-                      title="District {{ a[f.padLeft(ac) + f.padLeft(ar)] }}">
+                        title="{{#(a[f.padLeft(ac) + f.padLeft(ar)])}}District {{ a[f.padLeft(ac) + f.padLeft(ar)] }}{{/()}}">
                       {{ a[f.padLeft(ac) + f.padLeft(ar)] }}
                     </div>
                   </td>
