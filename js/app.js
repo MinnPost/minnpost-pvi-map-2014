@@ -9,11 +9,17 @@
 define('minnpost-pvi-map-2014', [
   'jquery', 'underscore', 'ractive', 'ractive-events-tap',
   'mpConfig', 'mpFormatters', 'helpers',
-  'text!templates/application.mustache'
+  'text!templates/application.mustache',
+  'text!../data/district-arrangement.json',
+  'text!../data/pvi-districts.json',
 ], function(
   $, _, Ractive, RactiveEventsTap, mpConfig, mpFormatters,
-  helpers, tApplication
+  helpers, tApplication, dArrangement, dPVI
   ) {
+
+  // Turn data
+  dArrangement = JSON.parse(dArrangement);
+  dPVI = JSON.parse(dPVI);
 
   // Constructor for app
   var App = function(options) {
@@ -29,13 +35,23 @@ define('minnpost-pvi-map-2014', [
     // Start function
     start: function() {
       var thisApp = this;
+      var arrangements = {};
+
+      // Some data manipulation
+      _.each(dArrangement, function(d, di) {
+        arrangements[mpFormatters.padLeft(d[0]) + mpFormatters.padLeft(d[1])] = d[2];
+      });
 
       // Create main application view
       this.mainView = new Ractive({
         el: this.$el,
         template: tApplication,
         data: {
-
+          a: arrangements,
+          aRows: _.range(_.max(dArrangement, function(d, di) { return d[1]; })[1] + 1),
+          aColumns: _.range(_.max(dArrangement, function(d, di) { return d[0]; })[0] + 1),
+          p: dPVI,
+          f: mpFormatters
         },
         partials: {
 

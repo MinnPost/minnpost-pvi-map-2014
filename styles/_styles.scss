@@ -18,6 +18,30 @@ body .node-unpublished {
     padding-top: 1em;
   }
 
+  table.arrangement {
+    tr, td {
+      margin: 0;
+      padding: 0;
+      border: none;
+      text-align: center;
+    }
+
+    td {
+      padding: 2px;
+    }
+
+    .grid {
+      width: 25px;
+      height: 25px;
+      font-size: 12px;
+      line-height: 24px;
+      border-radius: 3px;
+
+      &.has-value {
+        background-color: #BDBDBD;
+      }
+    }
+  }
 
   // Custom breakpoints
   @media screen and (max-width: 768px) {

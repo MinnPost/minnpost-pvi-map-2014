@@ -18,6 +18,9 @@ source_pvi := $(original)/pvi-cartogram-data.csv
 build_pvi_json := $(build)/pvi.json
 build_districts_json := $(build)/districts.json
 
+# Finals
+final_pvi_json := $(data)/pvi-districts.json
+
 
 
 
@@ -33,6 +36,15 @@ clean_convert:
 	rm -rv $(build)/*
 
 
+# Finals
+$(final_pvi_json): $(build_pvi_json)
+	cp $(build_pvi_json) $(final_pvi_json)
+
+clean_final:
+	rm $(final_pvi_json)
+
+
+
 # General
-all: convert
-clean: clean_convert
+all: convert $(final_pvi_json)
+clean: clean_convert clean_final

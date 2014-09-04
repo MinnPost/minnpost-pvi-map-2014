@@ -2,12 +2,29 @@
   <div class="message-container"></div>
 
   <div class="content-container">
+    <div class="row">
+      <div class="column-medium-50">
+        <table class="arrangement">
+          <tbody>
+            {{#aRows:ar}}
+              <tr>
+                {{#aColumns:ac}}
+                  <td>
+                    <div class="grid {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}">
+                      {{ a[f.padLeft(ac) + f.padLeft(ar)] }}
+                    </div>
+                  </td>
+                {{/aColumns}}
+              </tr>
+            {{/aRows}}
+          </tbody>
+        </table>
+      </div>
 
-    <h3>Minnpost Pvi Map 2014</h3>
+      <div class="column-medium-50">
 
-    <div class="loading-block"></div>
-
-    <p>Welcome to your new MinnPost application, built from the MinnPost Templating system.  Make sure to use the <a href="http://code.minnpost.com/minnpost-styles/">MinnPost Style Guide</a> for all your styling needs.</p>
+      </div>
+    </div>
 
   </div>
 
