@@ -12,18 +12,30 @@
                   <td>
                     <div
                       on-tap="selectDistrict:{{ a[f.padLeft(ac) + f.padLeft(ar)] }}"
-                      class="grid {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}"
+                      class="grid
+                        {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}
+                        {{#(district['District'] === a[f.padLeft(ac) + f.padLeft(ar)])}}active{{/()}}
+                      "
                       style="
                         background-color: {{ r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex() }};
                         color: {{ fg(r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex()) }};
+                        width: {{ gs }}px;
+                        height: {{ gs }}px;
+                        font-size: {{ gs * 0.3 }}px;
+                        line-height: {{ gs * 0.9 }}px;
                       "
-                      title="{{ p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14 }}">
+                      title="District {{ a[f.padLeft(ac) + f.padLeft(ar)] }}">
                       {{ a[f.padLeft(ac) + f.padLeft(ar)] }}
                     </div>
                   </td>
                 {{/aColumns}}
               </tr>
             {{/aRows}}
+
+            <tr class="place-labels">
+              <td colspan="8">Greater Minnesota</td>
+              <td colspan="{{ aColumns.length - 8 }}">Metro area</td>
+            </tr>
           </tbody>
         </table>
 
@@ -44,6 +56,8 @@
         {{#district}}
           <div class="district-display" intro="fade" outro="fade">
             <h3>District {{ district['District'] }}</h3>
+
+            <p>Narrative description of district here (instead of table)??</p>
 
             <table class="striped">
               <tbody>
@@ -66,7 +80,13 @@
                   <td>{{ district['Challenger 3'] }} ({{ district['Challenger 3 Party'] }})</td>
                 </tr>
               </tbody>
-            </tdead>
+            </table>
+
+            <div class="map">
+              <div class="loading-container">
+                <i class="loading"></i> Load map here...
+              </div>
+            </div>
           </div>
         {{/district}}
       </div>
@@ -76,7 +96,7 @@
 
   <div class="footnote-container">
     <div class="footnote">
-      <p>Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-pvi-map-2014" target="_blank">Github</a>.</p>
+      <p>Partisan Voting Index (PVI) created by MinnPost using past election results data provided by the Office of the Minnesota Secretary of State.  Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-pvi-map-2014" target="_blank">Github</a>.</p>
 
     </div>
   </div>

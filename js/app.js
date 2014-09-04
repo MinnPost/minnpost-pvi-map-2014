@@ -56,6 +56,7 @@ define('minnpost-pvi-map-2014', [
         template: tApplication,
         data: {
           a: arrangements,
+          gs: 27,
           aRows: _.range(_.max(dArrangement, function(d, di) { return d[1]; })[1] + 1),
           aColumns: _.range(_.max(dArrangement, function(d, di) { return d[0]; })[0] + 1),
           p: dPVI,
@@ -68,6 +69,15 @@ define('minnpost-pvi-map-2014', [
         partials: {
 
         }
+      });
+
+      // Observation events
+      this.mainView.observe('a', function(n, o) {
+        if (_.isObject(n) && _.size(n) > 0) {
+          this.set('gs', (thisApp.$('.arrangement').width() / this.get('aColumns').length) - 7);
+        }
+      }, {
+        defer: true
       });
 
       // Handle events
@@ -87,7 +97,7 @@ define('minnpost-pvi-map-2014', [
     // for text
     makeFGColor: function(bg) {
       var l = chroma(bg).luminance();
-      return (l < 0.5) ? '#FFFFFF' : '#222222';
+      return (l < 0.5) ? '#FFFFFF' : '#282828';
     },
 
     // Default options

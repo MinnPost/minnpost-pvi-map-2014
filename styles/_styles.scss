@@ -30,20 +30,26 @@ body .node-unpublished {
     }
 
     td {
-      padding: 2px;
     }
 
     .grid {
-      width: 27px;
-      height: 27px;
-      font-size: 10px;
-      line-height: 24px;
-      border-radius: 3px;
+      border: 2px solid #FFFFFF;
+      border-radius: 4px;
 
       &.has-value {
         background-color: #BDBDBD;
         cursor: pointer;
       }
+
+      &.active {
+        border: 2px solid #282828;
+        border-radius: 3px;
+      }
+    }
+
+    .place-labels td {
+      padding-top: 0.85em;
+      font-size: 1.15em;
     }
   }
 
@@ -62,6 +68,13 @@ body .node-unpublished {
       .legend-item-text {
         font-size: 0.75em;
       }
+    }
+  }
+
+  .district-display {
+
+    .map {
+      height: 10em;
     }
   }
 
