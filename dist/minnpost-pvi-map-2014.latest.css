@@ -45,15 +45,21 @@ body .node-unpublished {
 }
 .mp .minnpost-pvi-map-2014-container .legend .legend-item {
   display: inline-block;
-  width: 10%;
-  padding: 3px;
+  width: 8%;
+  padding: 2px;
 }
 .mp .minnpost-pvi-map-2014-container .legend .legend-item .legend-item-color {
-  height: 0.5em;
+  height: 0.75em;
+  margin-bottom: 0.25em;
 }
 .mp .minnpost-pvi-map-2014-container .legend .legend-item .legend-item-text {
   font-size: 0.75em;
+  line-height: 1.1em;
+}
+.mp .minnpost-pvi-map-2014-container .details-placeholder {
+  padding-top: 3em;
+  text-align: center;
 }
 .mp .minnpost-pvi-map-2014-container .district-display .map {
-  height: 10em;
+  height: 20em;
 }
