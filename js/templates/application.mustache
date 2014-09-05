@@ -45,7 +45,14 @@
               <div class="legend-item-color" style="background-color: {{ this }};"></div>
 
               <div class="legend-item-text">
-                {{ rd[i] }} - {{ rd[i + 1] }}
+                {{#(i === 0)}} {{ f.number(Math.abs(rd[i + 1]), 0) }}+ {{/()}}
+                {{#(i === rc.length - 1)}} {{ f.number(Math.abs(rd[i]), 0) }}+ {{/()}}
+                {{#(i !== rc.length - 1 && i !== 0)}}
+                  {{ f.number(Math.abs(rd[i]), 0) }} - {{ f.number(Math.abs(rd[i + 1]), 0) }}
+                {{/()}}
+                <br>
+                {{#(rd[i] < 0) }}DFL{{/()}}
+                {{#(rd[i] >= 0) }}R{{/()}}
               </div>
             </div>
           {{/rc}}
@@ -60,37 +67,44 @@
           <div class="district-display" intro="fade" outro="fade">
             <h3>District {{ district['District'] }}</h3>
 
-            <p>Narrative description of district here (instead of table)??</p>
+            <p>
+              With a PVI of <strong>{{ f.number(district['PVI14'], 1) }}</strong>,
+              district {{ district['District'] }} is
 
-            <table class="striped">
-              <tbody>
-                <tr><td>PVI</td><td>{{ district['PVI14'] }}</td></tr>
-                <tr><td>2012 Margin</td><td>{{ district['margin12'] }}</td></tr>
-                <tr>
-                  <td>Incumbent</td>
-                  <td>{{ district['Incumbent'] }} ({{ district['Incumbent Party'] }})</td>
-                </tr>
-                <tr>
-                  <td>Challenger 1</td>
-                  <td>{{ district['Challenger 1'] }} ({{ district['Challenger 1 Party'] }})</td>
-                </tr>
-                <tr>
-                  <td>Challenger 2</td>
-                  <td>{{ district['Challenger 2'] }} ({{ district['Challenger 2 Party'] }})</td>
-                </tr>
-                <tr>
-                  <td>Challenger 3</td>
-                  <td>{{ district['Challenger 3'] }} ({{ district['Challenger 3 Party'] }})</td>
-                </tr>
-              </tbody>
-            </table>
+              <em>
+                {{#(district.pviLevel === 1)}}slightly{{/()}}
+                {{#(district.pviLevel === 2)}}somewhat{{/()}}
+                {{#(district.pviLevel === 3)}}significantly{{/()}}
+                {{#(district.pviLevel === 4)}}very{{/()}}
+              </em>
+
+              {{#(district['PVI14'] < 0)}}DFL{{/()}}
+              {{#(district['PVI14'] > 0)}}Republican{{/()}} leaning.
+
+              {{#district.Incumbent}}
+                The {{ district['Incumbent Party'] }} incumbent
+                {{ district.Incumbent}} might have
+
+                {{#(district.pviLevel === 1)}}a very competitive{{/()}}
+                {{#(district.pviLevel === 2)}}a competitive{{/()}}
+                {{#(district.pviLevel === 3)}}an easy{{/()}}
+                {{#(district.pviLevel === 4)}}a very easy{{/()}}
+
+                race against challengers
+
+                {{#district.challengers}}
+                  {{ .name }} ({{ .party }}),
+                {{/district.challengers}}
+
+              {{/district.Incumbent}}
+            </p>
 
             {{#district.boundary.simple_shape }}
               <div class="map" decorator="map:{{ this }}"></div>
             {{/district.boundary.simple_shape}}
             {{^district.boundary.simple_shape}}
               <div class="loading-container">
-                <i class="loading"></i> Load map here...
+                <i class="loading"></i> Loading map...
               </div>
             {{/district.boundary.simple_shape}}
           </div>

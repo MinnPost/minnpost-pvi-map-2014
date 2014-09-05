@@ -39,17 +39,39 @@ define('minnpost-pvi-map-2014', [
       var thisApp = this;
       var arrangements = {};
       var colorPoints = ['#0793AB', 'FFFFFF', '#A1000F'];
-      var pviPoints = [-20, 20];
+      var pviPoints = [-20, -10, -5, 0, 5, 10, 20];
+      var pviIntervals = 8;
       var cRange;
 
       // Some data manipulation
       _.each(dArrangement, function(d, di) {
         arrangements[mpFormatters.padLeft(d[0]) + mpFormatters.padLeft(d[1])] = d[2];
       });
+      _.each(dPVI, function(d, di) {
+        d.PVI14 = parseFloat(d.PVI14);
+        d.margin12 = parseFloat(d.margin12);
+        d.challengers = [];
+        d.pviStrength = Math.abs(d.PVI14);
+        d.pviLevel = (d.pviStrength <= 5) ? 1 :
+          (d.pviStrength > 5 && d.pviStrength <= 10) ? 2 :
+          (d.pviStrength > 10 && d.pviStrength <= 15) ? 3 :
+          (d.pviStrength > 15) ? 4 : 0;
+
+        _.each(['Challenger 1', 'Challenger 2', 'Challenger 3'], function(c, ci) {
+          if (d[c]) {
+            d.challengers.push({
+              name: d[c],
+              party: d[c + ' Party']
+            });
+          }
+        });
+
+        d[di] = d;
+      });
 
       // Color range
       cRange = chroma.scale(colorPoints).mode('hsl')
-        .domain(pviPoints, 8);
+        .domain(pviPoints, pviIntervals);
 
       // Create main application view
       this.mainView = new Ractive({
@@ -144,6 +166,7 @@ define('minnpost-pvi-map-2014', [
           style: mpMaps.mapStyle
         }).addTo(map);
         map.fitBounds(layer.getBounds());
+        //map.zoomOut();
         map.invalidateSize();
       }
 

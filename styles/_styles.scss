@@ -58,15 +58,17 @@ body .node-unpublished {
 
     .legend-item {
       display: inline-block;
-      width: 10%;
-      padding: 3px;
+      width: 8%;
+      padding: 2px;
 
       .legend-item-color {
-        height: 0.5em;
+        height: 0.75em;
+        margin-bottom: 0.25em
       }
 
       .legend-item-text {
         font-size: 0.75em;
+        line-height: 1.1em;
       }
     }
   }
