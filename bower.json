@@ -23,7 +23,8 @@
     "jquery": "~1.11.0",
     "minnpost-styles": "master",
     "chroma-js": "~0.5.6",
-    "ractive-transitions-fade": "~0.1.2"
+    "ractive-transitions-fade": "~0.1.2",
+    "leaflet": "~0.7.3"
   },
   "dependencyMap": {
     "requirejs": {
@@ -86,6 +87,16 @@
       ],
       "returns": "chroma"
     },
+    "leaflet": {
+      "rname": "chroma",
+      "js": [
+        "leaflet/dist/leaflet-src"
+      ],
+      "css": [
+        "leaflet/dist/leaflet"
+      ],
+      "returns": "L"
+    },
     "minnpost-styles": {
       "rname": "mpStyles",
       "css": [
@@ -109,6 +120,13 @@
         "minnpost-styles/dist/minnpost-styles.formatters"
       ],
       "returns": "mpFormatters"
+    },
+    "mpMaps": {
+      "rname": "mpMaps",
+      "js": [
+        "minnpost-styles/dist/minnpost-styles.maps"
+      ],
+      "returns": "mpMaps"
     }
   }
 }

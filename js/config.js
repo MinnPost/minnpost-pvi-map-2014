@@ -18,8 +18,10 @@ require.config({
     'ractive-events-tap': '../bower_components/ractive-events-tap/ractive-events-tap',
     'ractive-transitions-fade': '../bower_components/ractive-transitions-fade/ractive-transitions-fade',
     'chroma': '../bower_components/chroma-js/chroma',
+    'leaflet': '../bower_components/leaflet/dist/leaflet-src',
     'mpConfig': '../bower_components/minnpost-styles/dist/minnpost-styles.config',
     'mpFormatters': '../bower_components/minnpost-styles/dist/minnpost-styles.formatters',
+    'mpMaps': '../bower_components/minnpost-styles/dist/minnpost-styles.maps',
     'minnpost-pvi-map-2014': 'app'
   }
 });

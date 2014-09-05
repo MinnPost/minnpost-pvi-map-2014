@@ -7,14 +7,15 @@
 
 // Create main application
 define('minnpost-pvi-map-2014', [
-  'jquery', 'underscore', 'chroma',
+  'jquery', 'underscore', 'chroma', 'leaflet',
   'ractive', 'ractive-events-tap', 'ractive-transitions-fade',
-  'mpConfig', 'mpFormatters', 'helpers',
+  'mpConfig', 'mpFormatters', 'mpMaps', 'helpers',
   'text!templates/application.mustache',
   'text!../data/district-arrangement.json',
   'text!../data/pvi-districts.json',
 ], function(
-  $, _, chroma, Ractive, RactiveEventsTap, RactiveTransitionsFade, mpConfig, mpFormatters,
+  $, _, chroma, L, Ractive, RactiveEventsTap, RactiveTransitionsFade,
+  mpConfig, mpFormatters, mpMaps,
   helpers, tApplication, dArrangement, dPVI
   ) {
 
@@ -68,10 +69,13 @@ define('minnpost-pvi-map-2014', [
         },
         partials: {
 
+        },
+        decorators: {
+          map: this.mapDecorator
         }
       });
 
-      // Observation events
+      // Observation arrangement
       this.mainView.observe('a', function(n, o) {
         if (_.isObject(n) && _.size(n) > 0) {
           this.set('gs', (thisApp.$('.arrangement').width() / this.get('aColumns').length) - 7);
@@ -80,12 +84,41 @@ define('minnpost-pvi-map-2014', [
         defer: true
       });
 
+      // Observe selected district
+      this.mainView.observe('district', function(n, o) {
+        var thisView = this;
+        var boundary = this.get('p.' + n.District + '.boundary');
+
+        if (_.isObject(n) && !_.isObject(boundary)) {
+          $.getJSON(thisApp.options.boundaryAPI.replace('[[[ID]]]', n.District.toLowerCase()))
+            .done(function(data) {
+              var current = thisView.get('district');
+
+              if (_.isObject(data)) {
+                // Set on dataset
+                thisView.set('p.' + n.District + '.boundary', data);
+                // Set on current district if still the same
+                if (current.District === n.District) {
+                  thisView.set('district.boundary', data);
+                }
+              }
+            });
+        }
+      });
+
       // Handle events
       this.mainView.on('selectDistrict', function(e, district) {
         e.original.preventDefault();
         var thisView = this;
+        var current = this.get('district');
+        var same = (_.isObject(current)) ? (current.District === district) : false;
 
-        if (_.isObject(dPVI[district])) {
+        // Mark as viewed so that the placeholder will not show up
+        // everytime
+        this.set('placeholderSeen', true);
+
+        // Make sure there is something and its different
+        if (!same && _.isObject(dPVI[district])) {
           this.set('district', undefined).then(function() {
             thisView.set('district', dPVI[district]);
           });
@@ -100,11 +133,35 @@ define('minnpost-pvi-map-2014', [
       return (l < 0.5) ? '#FFFFFF' : '#282828';
     },
 
+    // Ractive decorator for making a map
+    mapDecorator: function (node, shape) {
+      var map, layer;
+
+      // Add map
+      if (!_.isObject(map) && _.isObject(shape)) {
+        map = mpMaps.makeLeafletMap(node);
+        layer = L.geoJson(shape, {
+          style: mpMaps.mapStyle
+        }).addTo(map);
+        map.fitBounds(layer.getBounds());
+        map.invalidateSize();
+      }
+
+      return {
+        teardown: function () {
+          if (_.isObject(map)) {
+            map.remove();
+          }
+        }
+      };
+    },
+
     // Default options
     defaultOptions: {
       projectName: 'minnpost-pvi-map-2014',
       remoteProxy: null,
       el: '.minnpost-pvi-map-2014-container',
+      boundaryAPI: '//boundaries.minnpost.com/1.0/boundary/[[[ID]]]-state-house-district-2012?callback=?',
       availablePaths: {
         local: {
           css: ['.tmp/css/main.css'],

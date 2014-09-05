@@ -71,10 +71,15 @@ body .node-unpublished {
     }
   }
 
+  .details-placeholder {
+    padding-top: 3em;
+    text-align: center;
+  }
+
   .district-display {
 
     .map {
-      height: 10em;
+      height: 20em;
     }
   }
 

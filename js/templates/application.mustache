@@ -53,6 +53,9 @@
       </div>
 
       <div class="column-medium-33">
+        {{#(!district && !placeholderSeen)}}
+          <p class="details-placeholder small em">Click on a district to see PVI and candidate details.</p>
+        {{/()}}
         {{#district}}
           <div class="district-display" intro="fade" outro="fade">
             <h3>District {{ district['District'] }}</h3>
@@ -82,11 +85,14 @@
               </tbody>
             </table>
 
-            <div class="map">
+            {{#district.boundary.simple_shape }}
+              <div class="map" decorator="map:{{ this }}"></div>
+            {{/district.boundary.simple_shape}}
+            {{^district.boundary.simple_shape}}
               <div class="loading-container">
                 <i class="loading"></i> Load map here...
               </div>
-            </div>
+            {{/district.boundary.simple_shape}}
           </div>
         {{/district}}
       </div>
