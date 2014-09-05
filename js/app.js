@@ -56,13 +56,22 @@ define('minnpost-pvi-map-2014', [
           (d.pviStrength > 5 && d.pviStrength <= 10) ? 2 :
           (d.pviStrength > 10 && d.pviStrength <= 15) ? 3 :
           (d.pviStrength > 15) ? 4 : 0;
+        d.pviParty = (d.PVI14 < 0) ? 'dfl' : 'r';
+        d.incumbentSameAsPVI = (d.pviParty ===  d['Incumbent Party'].toLowerCase());
+        d.incumbentPartyChallenger = false;
 
+        // Put challengers into an array
         _.each(['Challenger 1', 'Challenger 2', 'Challenger 3'], function(c, ci) {
           if (d[c]) {
             d.challengers.push({
               name: d[c],
               party: d[c + ' Party']
             });
+
+            // Test if there is a same-party challenger
+            if (d[c + ' Party'] === d['Incumbent Party']) {
+              d.incumbentPartyChallenger = true;
+            }
           }
         });
 
@@ -127,7 +136,7 @@ define('minnpost-pvi-map-2014', [
                 // Set on dataset
                 thisView.set('p.' + n.District + '.boundary', data);
                 // Set on current district if still the same
-                if (current.District === n.District) {
+                if (current && n && current.District === n.District) {
                   thisView.set('district.boundary', data);
                 }
               }

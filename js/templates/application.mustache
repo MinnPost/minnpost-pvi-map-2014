@@ -78,24 +78,66 @@
                 {{#(district.pviLevel === 4)}}very{{/()}}
               </em>
 
-              {{#(district['PVI14'] < 0)}}DFL{{/()}}
-              {{#(district['PVI14'] > 0)}}Republican{{/()}} leaning.
+              <span class="color-political-{{ district.pviParty}}">
+                {{#(district.pviParty === 'dfl')}}DFL{{/()}}
+                {{#(district.pviParty === 'r')}}Republican{{/()}}
+              </span> leaning.
 
               {{#district.Incumbent}}
-                The {{ district['Incumbent Party'] }} incumbent
-                {{ district.Incumbent}} might have
+                The
+                <span class="color-political-{{ district['Incumbent Party'].toLowerCase() }}">
+                  {{ district['Incumbent Party'] }}
+                </span>
+                incumbent {{ district.Incumbent}}
 
-                {{#(district.pviLevel === 1)}}a very competitive{{/()}}
-                {{#(district.pviLevel === 2)}}a competitive{{/()}}
-                {{#(district.pviLevel === 3)}}an easy{{/()}}
-                {{#(district.pviLevel === 4)}}a very easy{{/()}}
+                {{#(district.challengers.length === 0)}}
+                  will almost certainly win with no challengers.
+                {{/()}}
 
-                race against challengers
+                {{#(district.challengers.length > 0)}}
+                  might have
 
-                {{#district.challengers}}
-                  {{ .name }} ({{ .party }}),
-                {{/district.challengers}}
+                  {{#(district.pviLevel === 1)}}a very competitive{{/()}}
+                  {{#(district.pviLevel === 2)}}a competitive{{/()}}
+                  {{#(district.pviLevel === 3)}}an easy{{/()}}
+                  {{#(district.pviLevel === 4)}}a very easy{{/()}}
 
+                  race against challenger{{#(district.challengers.length > 1)}}s{{/()}}
+
+                  {{#district.challengers:i}}
+                    {{ .name }}
+                    (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}},{{/()}}{{/district.challengers}}.
+                {{/()}}
+              {{/district.Incumbent}}
+
+              {{^district.Incumbent}}
+                {{#district.challengers:i}}
+                  {{#(.party.toLowerCase() === district.pviParty)}}
+                    The
+                    <span class="color-political-{{ .party.toLowerCase() }}">{{ .name }}</span>
+                    candidate {{ district.Incumbent}}
+                  {{/()}}
+                {{/district.challengers:i}}
+
+                {{#(district.challengers.length === 1)}}
+                  will almost certainly win with no challengers.
+                {{/()}}
+
+                {{#(district.challengers.length > 1)}}
+                  might have
+
+                  {{#(district.pviLevel === 1)}}a very competitive{{/()}}
+                  {{#(district.pviLevel === 2)}}a competitive{{/()}}
+                  {{#(district.pviLevel === 3)}}an easy{{/()}}
+                  {{#(district.pviLevel === 4)}}a very easy{{/()}}
+
+                  race against challenger{{#(district.challengers.length > 2)}}s{{/()}}
+
+                  {{#district.challengers:i}}
+                    {{#(.party.toLowerCase() !== district.pviParty)}}
+                      {{ .name }}
+                      (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}}{{/()}}{{/()}}{{/district.challengers}}.
+                {{/()}}
               {{/district.Incumbent}}
             </p>
 
