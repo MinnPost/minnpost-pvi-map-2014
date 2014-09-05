@@ -73,6 +73,11 @@ define('minnpost-pvi-map-2014', [
       cRange = chroma.scale(colorPoints).mode('hsl')
         .domain(pviPoints, pviIntervals);
 
+      // Add formatter to remove leading zero
+      mpFormatters.removeLead = function(input) {
+        return (input.indexOf('0') === 0) ? input.substring(1) : input;
+      };
+
       // Create main application view
       this.mainView = new Ractive({
         el: this.$el,
@@ -110,9 +115,11 @@ define('minnpost-pvi-map-2014', [
       this.mainView.observe('district', function(n, o) {
         var thisView = this;
         var boundary = this.get('p.' + n.District + '.boundary');
+        var bID = mpFormatters.removeLead(n.District.toLowerCase());
 
         if (_.isObject(n) && !_.isObject(boundary)) {
-          $.getJSON(thisApp.options.boundaryAPI.replace('[[[ID]]]', n.District.toLowerCase()))
+          // Boundary service doesn't want leading zero
+          $.getJSON(thisApp.options.boundaryAPI.replace('[[[ID]]]', bID))
             .done(function(data) {
               var current = thisView.get('district');
 
@@ -162,6 +169,8 @@ define('minnpost-pvi-map-2014', [
       // Add map
       if (!_.isObject(map) && _.isObject(shape)) {
         map = mpMaps.makeLeafletMap(node);
+        map.removeControl(map.zoomControl);
+        map.addControl(new L.Control.Zoom({ position: 'topright' }));
         layer = L.geoJson(shape, {
           style: mpMaps.mapStyle
         }).addTo(map);

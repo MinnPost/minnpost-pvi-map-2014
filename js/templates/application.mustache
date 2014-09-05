@@ -25,7 +25,7 @@
                         line-height: {{ gs * 0.9 }}px;
                       "
                         title="{{#(a[f.padLeft(ac) + f.padLeft(ar)])}}District {{ a[f.padLeft(ac) + f.padLeft(ar)] }}{{/()}}">
-                      {{ a[f.padLeft(ac) + f.padLeft(ar)] }}
+                      {{ f.removeLead(a[f.padLeft(ac) + f.padLeft(ar)]) }}
                     </div>
                   </td>
                 {{/aColumns}}
@@ -65,7 +65,7 @@
         {{/()}}
         {{#district}}
           <div class="district-display" intro="fade" outro="fade">
-            <h3>District {{ district['District'] }}</h3>
+            <h3>District {{ f.removeLead(district['District']) }}</h3>
 
             <p>
               With a PVI of <strong>{{ f.number(district['PVI14'], 1) }}</strong>,
