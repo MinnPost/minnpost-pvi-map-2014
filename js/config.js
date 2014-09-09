@@ -13,7 +13,7 @@ require.config({
     'text': '../bower_components/text/text',
     'jquery': '../bower_components/jquery/dist/jquery',
     'underscore': '../bower_components/underscore/underscore',
-    'ractive': '../bower_components/ractive/ractive',
+    'ractive': '../bower_components/ractive/ractive-legacy',
     'ractive-events-tap': '../bower_components/ractive-events-tap/ractive-events-tap',
     'ractive-transitions-fade': '../bower_components/ractive-transitions-fade/ractive-transitions-fade',
     'chroma': '../bower_components/chroma-js/chroma',

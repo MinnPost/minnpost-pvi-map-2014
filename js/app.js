@@ -42,7 +42,9 @@ define('minnpost-pvi-map-2014', [
       var pviPoints = [-20, -10, -5, 0, 5, 10, 20];
       var pviIntervals = 8;
       var cRange;
-      var breaks = [750];
+      var breaks = [750, 450];
+      var arrangementSplit = 8;
+      var arrangementSplitTop = 2;
 
       // Some data manipulation
       _.each(dArrangement, function(d, di) {
@@ -103,7 +105,10 @@ define('minnpost-pvi-map-2014', [
           rd: cRange.domain(),
           f: mpFormatters,
           fg: this.makeFGColor,
-          sizeMedium: (this.vpSize().w <= breaks[0])
+          sizeMedium: (this.vpSize().w <= breaks[0]),
+          sizeSmall: (this.vpSize().w <= breaks[1]),
+          as: arrangementSplit,
+          ast: arrangementSplitTop
         },
         partials: {
 
@@ -116,11 +121,12 @@ define('minnpost-pvi-map-2014', [
       // Do some DOM hackery
       this.mainView.observe('a', function(n, o) {
         var $d;
+        var c = (this.get('sizeSmall')) ? 11 : this.get('aColumns').length;
 
         if (_.isObject(n) && _.size(n) > 0) {
           // Determine grid size
           _.delay(_.bind(function() {
-            this.set('gs', (thisApp.$('.arrangement').width() / this.get('aColumns').length) - 1);
+            this.set('gs', (thisApp.$('.arrangement').parent().width() / c) - 1);
           }, this), 1000);
 
           // If certain size, stick the display details
@@ -139,6 +145,11 @@ define('minnpost-pvi-map-2014', [
       // Observe selected district
       this.mainView.observe('district', function(n, o) {
         var thisView = this;
+
+        if (!_.isObject(n)) {
+          return;
+        }
+
         var boundary = this.get('p.' + n.District + '.boundary');
         var bID = mpFormatters.removeLead(n.District.toLowerCase());
 

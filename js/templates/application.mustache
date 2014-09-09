@@ -19,7 +19,7 @@
           <tbody>
             {{#aRows:ar}}
               <tr>
-                {{#aColumns:ac}}
+                {{#aColumns:ac}} {{#(!sizeSmall || (sizeSmall && ac < as))}}
                   <td>
                     <div
                       on-tap="selectDistrict:{{ a[f.padLeft(ac) + f.padLeft(ar)] }}"
@@ -41,16 +41,56 @@
                       {{ f.removeLead(a[f.padLeft(ac) + f.padLeft(ar)]) }}
                     </div>
                   </td>
-                {{/aColumns}}
+                {{/()}} {{/aColumns}}
               </tr>
             {{/aRows}}
 
             <tr class="place-labels">
               <td colspan="8">Greater Minnesota</td>
-              <td colspan="{{ aColumns.length - 8 }}">Metro area</td>
+              {{#(!sizeSmall || (sizeSmall && ac < as))}}
+                <td colspan="{{ aColumns.length - 8 }}">Metro area</td>
+              {{/()}}
             </tr>
           </tbody>
         </table>
+
+        {{#sizeSmall}}
+          <table class="arrangement">
+            <tbody>
+              {{#aRows:ar}} {{#(ar > ast)}}
+                <tr>
+                  {{#aColumns:ac}} {{#(ac >= as)}}
+                    <td>
+                      <div
+                        on-tap="selectDistrict:{{ a[f.padLeft(ac) + f.padLeft(ar)] }}"
+                        class="grid
+                          {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}
+                          {{#(district['District'] === a[f.padLeft(ac) + f.padLeft(ar)])}}active{{/()}}
+                          {{#filterCompetitive}}filtering{{/filterCompetitive}}
+                          pvi-level-{{ p[a[f.padLeft(ac) + f.padLeft(ar)]].pviLevel }}
+                        "
+                        style="
+                          background-color: {{ r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex() }};
+                          color: {{ fg(r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex()) }};
+                          width: {{ gs }}px;
+                          height: {{ gs }}px;
+                          font-size: {{ gs * 0.3 }}px;
+                          line-height: {{ gs * 0.9 }}px;
+                        "
+                          title="{{#(a[f.padLeft(ac) + f.padLeft(ar)])}}District {{ a[f.padLeft(ac) + f.padLeft(ar)] }}{{/()}}">
+                        {{ f.removeLead(a[f.padLeft(ac) + f.padLeft(ar)]) }}
+                      </div>
+                    </td>
+                  {{/()}} {{/aColumns}}
+                </tr>
+              {{/()}} {{/aRows}}
+
+              <tr class="place-labels">
+                <td colspan="{{ aColumns.length - 8 }}">Metro area</td>
+              </tr>
+            </tbody>
+          </table>
+        {{/sizeSmall}}
 
         <div class="legend">
           <div class="legend-item">
