@@ -229,8 +229,9 @@ define('minnpost-pvi-map-2014', [
         layer = L.geoJson(shape, {
           style: mpMaps.mapStyle
         }).addTo(map);
-        map.fitBounds(layer.getBounds());
-        //map.zoomOut();
+        map.fitBounds(layer.getBounds(), {
+          padding: [18, 18]
+        });
         map.invalidateSize();
       }
 
