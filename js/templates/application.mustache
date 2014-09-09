@@ -146,7 +146,7 @@
               {{#district.Incumbent}}
                 The
                 <span class="color-political-{{ district['Incumbent Party'].toLowerCase() }}">
-                  {{ district['Incumbent Party'] }}
+                  {{ (district['Incumbent Party'] === 'R') ? 'Republican' : district['Incumbent Party'] }}
                 </span>
                 incumbent {{ district.Incumbent}}
 
@@ -160,7 +160,8 @@
                   might have
 
                   {{#(district.pviLevel === 1)}}a very competitive{{/()}}
-                  {{#(district.pviLevel === 2)}}a competitive{{/()}}
+                  {{#(district.pviLevel === 2 && !incumbentSameAsPVI)}}a very competitive{{/()}}
+                  {{#(district.pviLevel === 2 && incumbentSameAsPVI)}}a competitive{{/()}}
                   {{#(district.pviLevel === 3)}}an easy{{/()}}
                   {{#(district.pviLevel === 4)}}a very easy{{/()}}
 
@@ -176,7 +177,9 @@
                 {{#district.challengers:i}}
                   {{#(.party.toLowerCase() === district.pviParty)}}
                     The
-                    <span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>
+                    <span class="color-political-{{ .party.toLowerCase() }}">
+                      {{ (.party === 'R') ? 'Republican' : .party }}
+                    </span>
                     candidate {{ .name }}
                   {{/()}}
                 {{/district.challengers:i}}
