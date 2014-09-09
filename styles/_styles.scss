@@ -25,7 +25,8 @@ body .node-unpublished {
 
   table.arrangement {
     margin-bottom: 3em;
-    width: auto;
+    width: 100%;
+    max-width: 100%;
 
     tr, td {
       margin: 0;
@@ -40,6 +41,8 @@ body .node-unpublished {
     .grid {
       border: 2px solid #FFFFFF;
       border-radius: 4px;
+      width: 3px;
+      height: 3px;
 
       &.has-value {
         background-color: #BDBDBD;
@@ -126,6 +129,40 @@ body .node-unpublished {
   }
 
   // Custom breakpoints
-  @media screen and (max-width: 768px) {
+  @media screen and (max-width: 750px) {
+    .cartogram,
+    .district-details {
+      width: 100%;
+      float: none;
+    }
+
+    .district-details {
+
+      &.stuck {
+        position: fixed;
+      }
+
+      .details-placeholder {
+        padding-top: 0.5em;
+      }
+
+      .district-display {
+        padding: 0.5em;
+
+        h3 {
+          display: inline;
+          float: left;
+          margin: 0 1em .25em 0;
+          padding: 0 0 .25em 0;
+          border-bottom: 1px solid #ABABAB;
+          font-size: 1.25em;
+        }
+      }
+
+      .map {
+        display: none;
+      }
+    }
+
   }
 }

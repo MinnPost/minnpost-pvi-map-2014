@@ -8,7 +8,6 @@ require.config({
   },
   baseUrl: 'js',
   paths: {
-
     'requirejs': '../bower_components/requirejs/require',
     'almond': '../bower_components/almond/almond',
     'text': '../bower_components/text/text',
@@ -22,6 +21,7 @@ require.config({
     'mpConfig': '../bower_components/minnpost-styles/dist/minnpost-styles.config',
     'mpFormatters': '../bower_components/minnpost-styles/dist/minnpost-styles.formatters',
     'mpMaps': '../bower_components/minnpost-styles/dist/minnpost-styles.maps',
+    'mpNav': '../bower_components/minnpost-styles/dist/minnpost-styles.nav',
     'minnpost-pvi-map-2014': 'app'
   }
 });

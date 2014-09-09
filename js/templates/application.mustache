@@ -14,7 +14,7 @@
     </div>
 
     <div class="row">
-      <div class="column-medium-66">
+      <div class="cartogram column-medium-66">
         <table class="arrangement">
           <tbody>
             {{#aRows:ar}}
@@ -79,7 +79,7 @@
         </div>
       </div>
 
-      <div class="column-medium-33">
+      <div class="district-details column-medium-33">
         {{#(!district && !placeholderSeen)}}
           <p class="details-placeholder em">Click on a district to see <br> PVI and candidate details.</p>
         {{/()}}
@@ -163,14 +163,16 @@
               {{/district.Incumbent}}
             </p>
 
-            {{#district.boundary.simple_shape }}
-              <div class="map" decorator="map:{{ this }}"></div>
-            {{/district.boundary.simple_shape}}
-            {{^district.boundary.simple_shape}}
-              <div class="loading-container">
-                <i class="loading"></i> Loading map...
-              </div>
-            {{/district.boundary.simple_shape}}
+            {{^sizeMedium}}
+              {{#district.boundary.simple_shape }}
+                <div class="map" decorator="map:{{ this }}"></div>
+              {{/district.boundary.simple_shape}}
+              {{^district.boundary.simple_shape}}
+                <div class="loading-container">
+                  <i class="loading"></i> Loading map...
+                </div>
+              {{/district.boundary.simple_shape}}
+            {{/sizeMedium}}
           </div>
         {{/district}}
       </div>

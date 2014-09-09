@@ -9,13 +9,13 @@
 define('minnpost-pvi-map-2014', [
   'jquery', 'underscore', 'chroma', 'leaflet',
   'ractive', 'ractive-events-tap', 'ractive-transitions-fade',
-  'mpConfig', 'mpFormatters', 'mpMaps', 'helpers',
+  'mpConfig', 'mpFormatters', 'mpMaps', 'mpNav', 'helpers',
   'text!templates/application.mustache',
   'text!../data/district-arrangement.json',
   'text!../data/pvi-districts.json',
 ], function(
   $, _, chroma, L, Ractive, RactiveEventsTap, RactiveTransitionsFade,
-  mpConfig, mpFormatters, mpMaps,
+  mpConfig, mpFormatters, mpMaps, mpNav,
   helpers, tApplication, dArrangement, dPVI
   ) {
 
@@ -42,6 +42,7 @@ define('minnpost-pvi-map-2014', [
       var pviPoints = [-20, -10, -5, 0, 5, 10, 20];
       var pviIntervals = 8;
       var cRange;
+      var breaks = [750];
 
       // Some data manipulation
       _.each(dArrangement, function(d, di) {
@@ -101,7 +102,8 @@ define('minnpost-pvi-map-2014', [
           rc: cRange.colors(),
           rd: cRange.domain(),
           f: mpFormatters,
-          fg: this.makeFGColor
+          fg: this.makeFGColor,
+          sizeMedium: (this.vpSize().w <= breaks[0])
         },
         partials: {
 
@@ -111,10 +113,24 @@ define('minnpost-pvi-map-2014', [
         }
       });
 
-      // Observation arrangement
+      // Do some DOM hackery
       this.mainView.observe('a', function(n, o) {
+        var $d;
+
         if (_.isObject(n) && _.size(n) > 0) {
-          this.set('gs', (thisApp.$('.arrangement').width() / this.get('aColumns').length) - 7);
+          // Determine grid size
+          _.delay(_.bind(function() {
+            this.set('gs', (thisApp.$('.arrangement').width() / this.get('aColumns').length) - 1);
+          }, this), 1000);
+
+          // If certain size, stick the display details
+          if (thisApp.vpSize().w <= breaks[0]) {
+            $d = $('.district-details');
+            //$d.wrap('<div class="minnpost-full-container"></div>');
+            $d.mpStick({
+              container: $d.parent().parent().parent()
+            });
+          }
         }
       }, {
         defer: true
@@ -175,6 +191,14 @@ define('minnpost-pvi-map-2014', [
       });
     },
 
+    // Get view port size
+    vpSize: function() {
+      return {
+        w: $(window).width(),
+        h: $(window).height()
+      };
+    },
+
     // Given a color, figure out the best foreground color
     // for text
     makeFGColor: function(bg) {
@@ -183,11 +207,11 @@ define('minnpost-pvi-map-2014', [
     },
 
     // Ractive decorator for making a map
-    mapDecorator: function (node, shape) {
+    mapDecorator: function(node, shape) {
       var map, layer;
 
       // Add map
-      if (!_.isObject(map) && _.isObject(shape)) {
+      if (!_.isObject(map) && _.isObject(shape) && !this.get('sizeMedium')) {
         map = mpMaps.makeLeafletMap(node);
         map.removeControl(map.zoomControl);
         map.addControl(new L.Control.Zoom({ position: 'topright' }));
