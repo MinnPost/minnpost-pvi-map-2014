@@ -15,7 +15,7 @@ body .node-unpublished {
   padding-top: 3em;
 }
 .mp .minnpost-pvi-map-2014-container .filters {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   text-align: center;
 }
 .mp .minnpost-pvi-map-2014-container table.arrangement {
@@ -40,15 +40,30 @@ body .node-unpublished {
   border: 2px solid #282828;
   border-radius: 3px;
 }
-.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-2, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-3, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-4, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-5 {
-  opacity: 0.05;
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-3, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-4, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-5 {
+  opacity: 0.15;
 }
-.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-1 {
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-1, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-2 {
+  border: 1px solid #FFFFFF;
+  border-radius: 3px;
+  position: relative;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-1:before, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-2:before {
+  content: " ";
+  position: absolute;
+  z-index: 1;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
   border: 2px solid #7A7A7A;
   border-radius: 3px;
 }
-.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-1.active {
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-1.active, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-2.active {
   border: 2px solid #282828;
+}
+.mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-1.active:before, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-2.active:before {
+  border: none;
 }
 .mp .minnpost-pvi-map-2014-container table.arrangement .place-labels td {
   padding-top: 0.85em;
