@@ -150,7 +150,7 @@
                 </span>
                 incumbent {{ district.Incumbent}}
 
-                who won by a {{ f.number(Math.abs(district.margin12), 1) }} point margin in 2012
+                &mdash; who won by a {{ f.number(Math.abs(district.margin12), 1) }} point margin in 2012 &mdash;
 
                 {{#(district.challengers.length === 0)}}
                   will almost certainly win with no challengers.
@@ -169,7 +169,7 @@
 
                   {{#district.challengers:i}}
                     {{ .name }}
-                    (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}},{{/()}}{{/district.challengers}}.
+                    (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}}, {{/()}}{{/district.challengers}}.
                 {{/()}}
               {{/district.Incumbent}}
 
@@ -201,7 +201,7 @@
                   {{#district.challengers:i}}
                     {{#(.party.toLowerCase() !== district.pviParty)}}
                       {{ .name }}
-                      (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}}{{/()}}{{/()}}{{/district.challengers}}.
+                      (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}} {{/()}}{{/()}}{{/district.challengers}}.
                 {{/()}}
               {{/district.Incumbent}}
             </p>

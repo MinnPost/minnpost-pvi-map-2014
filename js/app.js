@@ -134,7 +134,7 @@ define('minnpost-pvi-map-2014', [
             $d = $('.district-details');
             //$d.wrap('<div class="minnpost-full-container"></div>');
             $d.mpStick({
-              container: $d.parent().parent().parent()
+              container: $d.parent().parent().parent().parent()
             });
           }
         }

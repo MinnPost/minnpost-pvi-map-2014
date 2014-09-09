@@ -147,6 +147,8 @@ body .node-unpublished {
 
       &.stuck {
         position: fixed;
+        top: auto;
+        bottom: 0;
       }
 
       .details-placeholder {
@@ -182,6 +184,10 @@ body .node-unpublished {
 
     .filters {
       margin-bottom: 2em;
+    }
+
+    .district-details {
+      font-size: 0.85em;
     }
   }
 }
