@@ -111,6 +111,8 @@ body .node-unpublished {
   }
   .mp .minnpost-pvi-map-2014-container .district-details.stuck {
     position: fixed;
+    top: auto;
+    bottom: 0;
   }
   .mp .minnpost-pvi-map-2014-container .district-details .details-placeholder {
     padding-top: 0.5em;
@@ -139,5 +141,8 @@ body .node-unpublished {
   }
   .mp .minnpost-pvi-map-2014-container .filters {
     margin-bottom: 2em;
+  }
+  .mp .minnpost-pvi-map-2014-container .district-details {
+    font-size: 0.85em;
   }
 }
