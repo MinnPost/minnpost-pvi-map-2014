@@ -44,6 +44,8 @@ body .node-unpublished {
   border-radius: 3px;
 }
 .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-3, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-4, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-5 {
+  filter: alpha(opacity=15);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=15)";
   opacity: 0.15;
 }
 .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-1, .mp .minnpost-pvi-map-2014-container table.arrangement .grid.filtering.pvi-level-2 {
@@ -80,6 +82,7 @@ body .node-unpublished {
   display: inline-block;
   width: 9%;
   padding: 2px;
+  vertical-align: top;
 }
 .mp .minnpost-pvi-map-2014-container .legend .legend-item .legend-item-color {
   height: 0.75em;
@@ -103,6 +106,9 @@ body .node-unpublished {
     width: 100%;
     float: none;
   }
+  .mp .minnpost-pvi-map-2014-container .legend {
+    margin-bottom: 2em;
+  }
   .mp .minnpost-pvi-map-2014-container .district-details.stuck {
     position: fixed;
   }
@@ -122,5 +128,16 @@ body .node-unpublished {
   }
   .mp .minnpost-pvi-map-2014-container .district-details .map {
     display: none;
+  }
+}
+@media screen and (max-width: 450px) {
+  .mp .minnpost-pvi-map-2014-container table.arrangement {
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 2em;
+  }
+  .mp .minnpost-pvi-map-2014-container .filters {
+    margin-bottom: 2em;
   }
 }
