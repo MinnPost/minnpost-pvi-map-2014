@@ -36084,6 +36084,207 @@ L.Map.include({
 
 });
 
+/**
+ * Navigation interaction
+ */
+
+(function(global, factory) {
+  // Common JS (i.e. browserify) environment
+  if (typeof module !== 'undefined' && module.exports && typeof require === 'function') {
+    module.exports = factory(require('jquery'), require('underscore'));
+  }
+  // AMD?
+  else if (typeof define === 'function' && define.amd) {
+    define('mpNav',['jquery', 'underscore'], factory);
+  }
+  // Browser global
+  else if (global.jQuery && global._) {
+    global.MP = global.MP || {};
+    global.MP.nav = factory(global.jQuery, global._);
+  }
+  else {
+    throw new Error('Could not find dependencies for MinnPost Styles Navigation.' );
+  }
+})(typeof window !== 'undefined' ? window : this, function($, _) {
+
+  // Wrapper object for some various things
+  var nav = {};
+
+  // Plugin for sticking things.  Defaults are for sticking to top.
+  nav.MPStickDefaults = {
+    activeClass: 'stuck top',
+    wrapperClass: 'minnpost-full-container',
+    topPadding: 0,
+    throttle: 90
+  };
+  function MPStick(element, options) {
+    // Defined some values and process options
+    this.element = element;
+    this.$element = $(element);
+    this._defaults = nav.MPStickDefaults;
+    this.options = $.extend( {}, this._defaults, options);
+    this._name = 'mpStick';
+    this._scrollEvent = 'scroll.mp.mpStick';
+    this._on = false;
+
+    this.init();
+  }
+  MPStick.prototype = {
+    init: function() {
+      // If contaier not passed, use parent
+      this.$container = (this.options.container === undefined) ? this.$element.parent() : $(this.options.container);
+
+      this.elementHeight = this.$element.outerHeight(true);
+
+      // Create a spacer element so content doesn't jump
+      this.$spacer = $('<div>').height(this.elementHeight).hide();
+      this.$element.after(this.$spacer);
+
+      // Add wrapper
+      if (this.options.wrapperClass) {
+        this.$element.wrapInner('<div class="' + this.options.wrapperClass + '"></div>');
+      }
+
+      // Throttle the scoll listen for better perfomance
+      this._throttledListen = _.bind(_.throttle(this.listen, this.options.throttle), this);
+      this._throttledListen();
+      $(window).on(this._scrollEvent, this._throttledListen);
+    },
+
+    listen: function() {
+      var containerTop = this.$container.offset().top;
+      var containerBottom = containerTop + this.$container.height();
+      var scrollTop = $(window).scrollTop();
+      var top = (containerTop - this.options.topPadding);
+      var bottom = (containerBottom - this.elementHeight - this.options.topPadding - 2);
+
+      // Test whether we are in the container and whether its
+      // already stuck or not
+      if (!this._on && scrollTop > top && scrollTop < bottom) {
+        this.on();
+      }
+      else if (this._on && (scrollTop < top || scrollTop > bottom)) {
+        this.off();
+      }
+    },
+
+    on: function() {
+      this.$element.addClass(this.options.activeClass);
+      if (this.options.topPadding) {
+        this.$element.css('top', this.options.topPadding);
+      }
+      this.$spacer.show();
+      this._on = true;
+    },
+
+    off: function() {
+      this.$element.removeClass(this.options.activeClass);
+      if (this.options.topPadding) {
+        this.$element.css('top', 'inherit');
+      }
+      this.$spacer.hide();
+      this._on = false;
+    },
+
+    remove: function() {
+      this.$container.off(this._scrollEvent);
+    }
+  };
+  // Register plugin
+  $.fn.mpStick = function(options) {
+    return this.each(function() {
+      if (!$.data(this, 'mpStick')) {
+        $.data(this, 'mpStick', new MPStick(this, options));
+      }
+    });
+  };
+
+
+
+  // Plugin for scroll spying
+  nav.MPScrollSpyDefaults = {
+    activeClass: 'active',
+    offset: 80,
+    throttle: 200
+  };
+  function MPScrollSpy(element, options) {
+    // Set some initial values and options
+    this.element = element;
+    this.$element = $(element);
+    this._defaults = nav.MPScrollSpyDefaults;
+    this.options = $.extend( {}, this._defaults, options);
+    this._name = 'mpScollSpy';
+    this._scrollEvent = 'scroll.mp.mpScollSpy';
+
+    this.init();
+  }
+  MPScrollSpy.prototype = {
+    init: function() {
+      // Get listeners and targets
+      this.$listeners = this.$element.find('[data-spy-on]');
+      this.$targets = this.$element.find('[data-spy-me]');
+
+      // Throttle the scoll listen for better perfomance
+      this._throttledListen = _.bind(_.throttle(this.listen, this.options.throttle), this);
+      this._throttledListen();
+      $(window).on(this._scrollEvent, this._throttledListen);
+
+      // Handle click
+      this.$listeners.on('click', _.bind(this.gotoClick, this));
+    },
+
+    listen: function() {
+      var thisPlugin = this;
+      var scrollTop = $(window).scrollTop();
+      var target;
+
+      // Find target that is closest to scroll top
+      this.$targets.each(function() {
+        var $target = $(this);
+        if ($target.offset().top <= (scrollTop + (thisPlugin.options.offset + 5))) {
+          target = $target.data('spyMe');
+        }
+      });
+
+      // Once found one, then mark the listener
+      if (target) {
+        this.$listeners.removeClass(this.options.activeClass);
+        this.$element.find('[data-spy-on="' + target + '"]').addClass(this.options.activeClass);
+      }
+    },
+
+    gotoClick: function(e) {
+      e.preventDefault();
+      var $listener = $(e.target);
+
+      this.goto($(e.target).data('spyOn'));
+    },
+
+    goto: function(target) {
+      var $target = this.$element.find('[data-spy-me="' + target + '"]');
+      var top = $target.offset().top;
+
+      $('html, body').animate({
+        scrollTop: (top - this.options.offset)
+      }, 600);
+    },
+
+    remove: function() {
+      this.$container.off(this._scrollEvent);
+    }
+  };
+  // Register plugin
+  $.fn.mpScrollSpy = function(options) {
+    return this.each(function() {
+      if (!$.data(this, 'mpScrollSpy')) {
+        $.data(this, 'mpScrollSpy', new MPScrollSpy(this, options));
+      }
+    });
+  };
+
+  return nav;
+});
+
 
 /**
  * Helpers functions such as formatters or extensions
@@ -36592,7 +36793,7 @@ define('text',['module'], function (module) {
 });
 
 
-define('text!templates/application.mustache',[],function () { return '<div class="application-container">\n  <div class="message-container"></div>\n\n  <div class="content-container">\n    <div class="filters">\n      <button on-tap="toggleCompetitive" class="button primary">\n        {{#filterCompetitive}}\n          Show all races\n        {{/filterCompetitive}}\n        {{^filterCompetitive}}\n          Show only competitive races\n        {{/filterCompetitive}}\n      </button>\n    </div>\n\n    <div class="row">\n      <div class="column-medium-66">\n        <table class="arrangement">\n          <tbody>\n            {{#aRows:ar}}\n              <tr>\n                {{#aColumns:ac}}\n                  <td>\n                    <div\n                      on-tap="selectDistrict:{{ a[f.padLeft(ac) + f.padLeft(ar)] }}"\n                      class="grid\n                        {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}\n                        {{#(district[\'District\'] === a[f.padLeft(ac) + f.padLeft(ar)])}}active{{/()}}\n                        {{#filterCompetitive}}filtering{{/filterCompetitive}}\n                        pvi-level-{{ p[a[f.padLeft(ac) + f.padLeft(ar)]].pviLevel }}\n                      "\n                      style="\n                        background-color: {{ r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex() }};\n                        color: {{ fg(r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex()) }};\n                        width: {{ gs }}px;\n                        height: {{ gs }}px;\n                        font-size: {{ gs * 0.3 }}px;\n                        line-height: {{ gs * 0.9 }}px;\n                      "\n                        title="{{#(a[f.padLeft(ac) + f.padLeft(ar)])}}District {{ a[f.padLeft(ac) + f.padLeft(ar)] }}{{/()}}">\n                      {{ f.removeLead(a[f.padLeft(ac) + f.padLeft(ar)]) }}\n                    </div>\n                  </td>\n                {{/aColumns}}\n              </tr>\n            {{/aRows}}\n\n            <tr class="place-labels">\n              <td colspan="8">Greater Minnesota</td>\n              <td colspan="{{ aColumns.length - 8 }}">Metro area</td>\n            </tr>\n          </tbody>\n        </table>\n\n        <div class="legend">\n          <div class="legend-item">\n            <div class="legend-item-color"></div>\n            <div class="legend-item-text">\n              <strong>PVI</strong>:<br>&nbsp;\n            </div>\n          </div>\n\n          {{#rc:i}}\n            <div class="legend-item">\n              <div class="legend-item-color" style="background-color: {{ this }};"></div>\n\n              <div class="legend-item-text">\n                {{#(i === 0)}} {{ f.number(Math.abs(rd[i + 1]), 0) }}+ {{/()}}\n                {{#(i === rc.length - 1)}} {{ f.number(Math.abs(rd[i]), 0) }}+ {{/()}}\n                {{#(i !== rc.length - 1 && i !== 0)}}\n                  {{ f.number(Math.abs(rd[i]), 0) }} - {{ f.number(Math.abs(rd[i + 1]), 0) }}\n                {{/()}}\n                <br>\n                {{#(rd[i] < 0) }}DFL{{/()}}\n                {{#(rd[i] >= 0) }}R{{/()}}\n              </div>\n            </div>\n          {{/rc}}\n        </div>\n      </div>\n\n      <div class="column-medium-33">\n        {{#(!district && !placeholderSeen)}}\n          <p class="details-placeholder em">Click on a district to see <br> PVI and candidate details.</p>\n        {{/()}}\n        {{#district}}\n          <div class="district-display" intro="fade" outro="fade">\n            <h3>District {{ f.removeLead(district[\'District\']) }}</h3>\n\n            <p>\n              With a PVI of <em>{{ f.number(district[\'PVI14\'], 1) }}</em>,\n              district {{ district[\'District\'] }} is\n\n              <strong>\n                {{#(district.pviLevel === 1)}}slightly{{/()}}\n                {{#(district.pviLevel === 2)}}somewhat{{/()}}\n                {{#(district.pviLevel === 3)}}significantly{{/()}}\n                {{#(district.pviLevel === 4)}}very{{/()}}\n\n                <span class="color-political-{{ district.pviParty}}">\n                  {{#(district.pviParty === \'dfl\')}}DFL{{/()}}\n                  {{#(district.pviParty === \'r\')}}Republican{{/()}}\n                </span> leaning.\n              </strong>\n\n              {{#district.Incumbent}}\n                The\n                <span class="color-political-{{ district[\'Incumbent Party\'].toLowerCase() }}">\n                  {{ district[\'Incumbent Party\'] }}\n                </span>\n                incumbent {{ district.Incumbent}}\n\n                who won by a {{ f.number(Math.abs(district.margin12), 1) }} point margin in 2012\n\n                {{#(district.challengers.length === 0)}}\n                  will almost certainly win with no challengers.\n                {{/()}}\n\n                {{#(district.challengers.length > 0)}}\n                  might have\n\n                  {{#(district.pviLevel === 1)}}a very competitive{{/()}}\n                  {{#(district.pviLevel === 2)}}a competitive{{/()}}\n                  {{#(district.pviLevel === 3)}}an easy{{/()}}\n                  {{#(district.pviLevel === 4)}}a very easy{{/()}}\n\n                  race against challenger{{#(district.challengers.length > 1)}}s{{/()}}\n\n                  {{#district.challengers:i}}\n                    {{ .name }}\n                    (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}},{{/()}}{{/district.challengers}}.\n                {{/()}}\n              {{/district.Incumbent}}\n\n              {{^district.Incumbent}}\n                {{#district.challengers:i}}\n                  {{#(.party.toLowerCase() === district.pviParty)}}\n                    The\n                    <span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>\n                    candidate {{ .name }}\n                  {{/()}}\n                {{/district.challengers:i}}\n\n                {{#(district.challengers.length === 1)}}\n                  will almost certainly win with no challengers.\n                {{/()}}\n\n                {{#(district.challengers.length > 1)}}\n                  might have\n\n                  {{#(district.pviLevel === 1)}}a very competitive{{/()}}\n                  {{#(district.pviLevel === 2)}}a competitive{{/()}}\n                  {{#(district.pviLevel === 3)}}an easy{{/()}}\n                  {{#(district.pviLevel === 4)}}a very easy{{/()}}\n\n                  race against challenger{{#(district.challengers.length > 2)}}s{{/()}}\n\n                  {{#district.challengers:i}}\n                    {{#(.party.toLowerCase() !== district.pviParty)}}\n                      {{ .name }}\n                      (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}}{{/()}}{{/()}}{{/district.challengers}}.\n                {{/()}}\n              {{/district.Incumbent}}\n            </p>\n\n            {{#district.boundary.simple_shape }}\n              <div class="map" decorator="map:{{ this }}"></div>\n            {{/district.boundary.simple_shape}}\n            {{^district.boundary.simple_shape}}\n              <div class="loading-container">\n                <i class="loading"></i> Loading map...\n              </div>\n            {{/district.boundary.simple_shape}}\n          </div>\n        {{/district}}\n      </div>\n    </div>\n\n  </div>\n\n  <div class="footnote-container">\n    <div class="footnote">\n      <p>Partisan Voting Index (PVI) created by MinnPost using past election results data provided by the Office of the Minnesota Secretary of State.  Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-pvi-map-2014" target="_blank">Github</a>.</p>\n\n    </div>\n  </div>\n</div>\n';});
+define('text!templates/application.mustache',[],function () { return '<div class="application-container">\n  <div class="message-container"></div>\n\n  <div class="content-container">\n    <div class="filters">\n      <button on-tap="toggleCompetitive" class="button small">\n        {{#filterCompetitive}}\n          Show all races\n        {{/filterCompetitive}}\n        {{^filterCompetitive}}\n          Show only competitive races\n        {{/filterCompetitive}}\n      </button>\n    </div>\n\n    <div class="row">\n      <div class="cartogram column-medium-66">\n        <table class="arrangement">\n          <tbody>\n            {{#aRows:ar}}\n              <tr>\n                {{#aColumns:ac}}\n                  <td>\n                    <div\n                      on-tap="selectDistrict:{{ a[f.padLeft(ac) + f.padLeft(ar)] }}"\n                      class="grid\n                        {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}\n                        {{#(district[\'District\'] === a[f.padLeft(ac) + f.padLeft(ar)])}}active{{/()}}\n                        {{#filterCompetitive}}filtering{{/filterCompetitive}}\n                        pvi-level-{{ p[a[f.padLeft(ac) + f.padLeft(ar)]].pviLevel }}\n                      "\n                      style="\n                        background-color: {{ r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex() }};\n                        color: {{ fg(r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex()) }};\n                        width: {{ gs }}px;\n                        height: {{ gs }}px;\n                        font-size: {{ gs * 0.3 }}px;\n                        line-height: {{ gs * 0.9 }}px;\n                      "\n                        title="{{#(a[f.padLeft(ac) + f.padLeft(ar)])}}District {{ a[f.padLeft(ac) + f.padLeft(ar)] }}{{/()}}">\n                      {{ f.removeLead(a[f.padLeft(ac) + f.padLeft(ar)]) }}\n                    </div>\n                  </td>\n                {{/aColumns}}\n              </tr>\n            {{/aRows}}\n\n            <tr class="place-labels">\n              <td colspan="8">Greater Minnesota</td>\n              <td colspan="{{ aColumns.length - 8 }}">Metro area</td>\n            </tr>\n          </tbody>\n        </table>\n\n        <div class="legend">\n          <div class="legend-item">\n            <div class="legend-item-color"></div>\n            <div class="legend-item-text">\n              <strong>PVI</strong>:<br>&nbsp;\n            </div>\n          </div>\n\n          {{#rc:i}}\n            <div class="legend-item">\n              <div class="legend-item-color" style="background-color: {{ this }};"></div>\n\n              <div class="legend-item-text">\n                {{#(i === 0)}} {{ f.number(Math.abs(rd[i + 1]), 0) }}+ {{/()}}\n                {{#(i === rc.length - 1)}} {{ f.number(Math.abs(rd[i]), 0) }}+ {{/()}}\n                {{#(i !== rc.length - 1 && i !== 0)}}\n                  {{ f.number(Math.abs(rd[i]), 0) }} - {{ f.number(Math.abs(rd[i + 1]), 0) }}\n                {{/()}}\n                <br>\n                {{#(rd[i] < 0) }}DFL{{/()}}\n                {{#(rd[i] >= 0) }}R{{/()}}\n              </div>\n            </div>\n          {{/rc}}\n        </div>\n      </div>\n\n      <div class="district-details column-medium-33">\n        {{#(!district && !placeholderSeen)}}\n          <p class="details-placeholder em">Click on a district to see <br> PVI and candidate details.</p>\n        {{/()}}\n        {{#district}}\n          <div class="district-display" intro="fade" outro="fade">\n            <h3>District {{ f.removeLead(district[\'District\']) }}</h3>\n\n            <p>\n              With a PVI of <em>{{ f.number(district[\'PVI14\'], 1) }}</em>,\n              district {{ district[\'District\'] }} is\n\n              <strong>\n                {{#(district.pviLevel === 1)}}slightly{{/()}}\n                {{#(district.pviLevel === 2)}}somewhat{{/()}}\n                {{#(district.pviLevel === 3)}}significantly{{/()}}\n                {{#(district.pviLevel === 4)}}very{{/()}}\n\n                <span class="color-political-{{ district.pviParty}}">\n                  {{#(district.pviParty === \'dfl\')}}DFL{{/()}}\n                  {{#(district.pviParty === \'r\')}}Republican{{/()}}\n                </span> leaning.\n              </strong>\n\n              {{#district.Incumbent}}\n                The\n                <span class="color-political-{{ district[\'Incumbent Party\'].toLowerCase() }}">\n                  {{ district[\'Incumbent Party\'] }}\n                </span>\n                incumbent {{ district.Incumbent}}\n\n                who won by a {{ f.number(Math.abs(district.margin12), 1) }} point margin in 2012\n\n                {{#(district.challengers.length === 0)}}\n                  will almost certainly win with no challengers.\n                {{/()}}\n\n                {{#(district.challengers.length > 0)}}\n                  might have\n\n                  {{#(district.pviLevel === 1)}}a very competitive{{/()}}\n                  {{#(district.pviLevel === 2)}}a competitive{{/()}}\n                  {{#(district.pviLevel === 3)}}an easy{{/()}}\n                  {{#(district.pviLevel === 4)}}a very easy{{/()}}\n\n                  race against challenger{{#(district.challengers.length > 1)}}s{{/()}}\n\n                  {{#district.challengers:i}}\n                    {{ .name }}\n                    (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}},{{/()}}{{/district.challengers}}.\n                {{/()}}\n              {{/district.Incumbent}}\n\n              {{^district.Incumbent}}\n                {{#district.challengers:i}}\n                  {{#(.party.toLowerCase() === district.pviParty)}}\n                    The\n                    <span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>\n                    candidate {{ .name }}\n                  {{/()}}\n                {{/district.challengers:i}}\n\n                {{#(district.challengers.length === 1)}}\n                  will almost certainly win with no challengers.\n                {{/()}}\n\n                {{#(district.challengers.length > 1)}}\n                  might have\n\n                  {{#(district.pviLevel === 1)}}a very competitive{{/()}}\n                  {{#(district.pviLevel === 2)}}a competitive{{/()}}\n                  {{#(district.pviLevel === 3)}}an easy{{/()}}\n                  {{#(district.pviLevel === 4)}}a very easy{{/()}}\n\n                  race against challenger{{#(district.challengers.length > 2)}}s{{/()}}\n\n                  {{#district.challengers:i}}\n                    {{#(.party.toLowerCase() !== district.pviParty)}}\n                      {{ .name }}\n                      (<span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>){{#(i !== district.challengers.length - 1)}}{{/()}}{{/()}}{{/district.challengers}}.\n                {{/()}}\n              {{/district.Incumbent}}\n            </p>\n\n            {{^sizeMedium}}\n              {{#district.boundary.simple_shape }}\n                <div class="map" decorator="map:{{ this }}"></div>\n              {{/district.boundary.simple_shape}}\n              {{^district.boundary.simple_shape}}\n                <div class="loading-container">\n                  <i class="loading"></i> Loading map...\n                </div>\n              {{/district.boundary.simple_shape}}\n            {{/sizeMedium}}\n          </div>\n        {{/district}}\n      </div>\n    </div>\n\n  </div>\n\n  <div class="footnote-container">\n    <div class="footnote">\n      <p>Partisan Voting Index (PVI) created by MinnPost using past election results data provided by the Office of the Minnesota Secretary of State.  Some code, techniques, and data on <a href="https://github.com/minnpost/minnpost-pvi-map-2014" target="_blank">Github</a>.</p>\n\n    </div>\n  </div>\n</div>\n';});
 
 
 define('text!../data/district-arrangement.json',[],function () { return '[[1,0,"02A"],[0,1,"01A"],[1,1,"01B"],[2,1,"02B"],[3,1,"06A"],[4,1,"06B"],[5,1,"03B"],[6,1,"03A"],[0,2,"04A"],[1,2,"04B"],[2,2,"05A"],[3,2,"05B"],[4,2,"07B"],[5,2,"07A"],[0,3,"08A"],[1,3,"08B"],[2,3,"10A"],[3,3,"10B"],[4,3,"11A"],[10,3,"30A"],[11,3,"30B"],[12,3,"35A"],[13,3,"35B"],[14,3,"31B"],[15,3,"32B"],[0,4,"12A"],[1,4,"09A"],[2,4,"09B"],[3,4,"15B"],[4,4,"11B"],[9,4,"34A"],[10,4,"36A"],[11,4,"36B"],[12,4,"37A"],[13,4,"37B"],[14,4,"38A"],[15,4,"38B"],[16,4,"39A"],[0,5,"12B"],[1,5,"13A"],[2,5,"13B"],[3,5,"15A"],[4,5,"32A"],[9,5,"34B"],[10,5,"40A"],[11,5,"40B"],[12,5,"41A"],[13,5,"41B"],[14,5,"42A"],[15,5,"42B"],[16,5,"43A"],[0,6,"17A"],[1,6,"17B"],[2,6,"14A"],[3,6,"14B"],[4,6,"31A"],[8,6,"44A"],[9,6,"45A"],[10,6,"45B"],[11,6,"59A"],[12,6,"60A"],[13,6,"66A"],[14,6,"66B"],[15,6,"67A"],[16,6,"43B"],[17,6,"39B"],[0,7,"16A"],[1,7,"18A"],[2,7,"29A"],[3,7,"29B"],[9,7,"44B"],[10,7,"46A"],[11,7,"59B"],[12,7,"60B"],[13,7,"64A"],[14,7,"65A"],[15,7,"67B"],[16,7,"53A"],[0,8,"16B"],[1,8,"18B"],[2,8,"47A"],[3,8,"33A"],[9,8,"33B"],[10,8,"46B"],[11,8,"61A"],[12,8,"62A"],[13,8,"63A"],[14,8,"65B"],[15,8,"53B"],[16,8,"54B"],[0,9,"19A"],[1,9,"20A"],[2,9,"20B"],[3,9,"58B"],[4,9,"21A"],[5,9,"21B"],[9,9,"48A"],[10,9,"49A"],[11,9,"61B"],[12,9,"62B"],[13,9,"63B"],[14,9,"64B"],[15,9,"52A"],[16,9,"54A"],[0,10,"22B"],[1,10,"19B"],[2,10,"23B"],[3,10,"25B"],[4,10,"24B"],[5,10,"25A"],[6,10,"28A"],[9,10,"47B"],[10,10,"48B"],[11,10,"49B"],[12,10,"50A"],[13,10,"50B"],[14,10,"51A"],[15,10,"51B"],[16,10,"52B"],[0,11,"22A"],[1,11,"23A"],[2,11,"24A"],[3,11,"26B"],[4,11,"26A"],[5,11,"27A"],[6,11,"27B"],[7,11,"28B"],[10,11,"55A"],[11,11,"55B"],[12,11,"56A"],[13,11,"56B"],[14,11,"58A"],[15,11,"57A"],[16,11,"57B"]]\n';});
@@ -36611,13 +36812,13 @@ define('text!../data/pvi-districts.json',[],function () { return '{"41A": {"Dist
 define('minnpost-pvi-map-2014', [
   'jquery', 'underscore', 'chroma', 'leaflet',
   'ractive', 'ractive-events-tap', 'ractive-transitions-fade',
-  'mpConfig', 'mpFormatters', 'mpMaps', 'helpers',
+  'mpConfig', 'mpFormatters', 'mpMaps', 'mpNav', 'helpers',
   'text!templates/application.mustache',
   'text!../data/district-arrangement.json',
   'text!../data/pvi-districts.json',
 ], function(
   $, _, chroma, L, Ractive, RactiveEventsTap, RactiveTransitionsFade,
-  mpConfig, mpFormatters, mpMaps,
+  mpConfig, mpFormatters, mpMaps, mpNav,
   helpers, tApplication, dArrangement, dPVI
   ) {
 
@@ -36644,6 +36845,7 @@ define('minnpost-pvi-map-2014', [
       var pviPoints = [-20, -10, -5, 0, 5, 10, 20];
       var pviIntervals = 8;
       var cRange;
+      var breaks = [750];
 
       // Some data manipulation
       _.each(dArrangement, function(d, di) {
@@ -36703,7 +36905,8 @@ define('minnpost-pvi-map-2014', [
           rc: cRange.colors(),
           rd: cRange.domain(),
           f: mpFormatters,
-          fg: this.makeFGColor
+          fg: this.makeFGColor,
+          sizeMedium: (this.vpSize().w <= breaks[0])
         },
         partials: {
 
@@ -36713,10 +36916,24 @@ define('minnpost-pvi-map-2014', [
         }
       });
 
-      // Observation arrangement
+      // Do some DOM hackery
       this.mainView.observe('a', function(n, o) {
+        var $d;
+
         if (_.isObject(n) && _.size(n) > 0) {
-          this.set('gs', (thisApp.$('.arrangement').width() / this.get('aColumns').length) - 7);
+          // Determine grid size
+          _.delay(_.bind(function() {
+            this.set('gs', (thisApp.$('.arrangement').width() / this.get('aColumns').length) - 1);
+          }, this), 1000);
+
+          // If certain size, stick the display details
+          if (thisApp.vpSize().w <= breaks[0]) {
+            $d = $('.district-details');
+            //$d.wrap('<div class="minnpost-full-container"></div>');
+            $d.mpStick({
+              container: $d.parent().parent().parent()
+            });
+          }
         }
       }, {
         defer: true
@@ -36777,6 +36994,14 @@ define('minnpost-pvi-map-2014', [
       });
     },
 
+    // Get view port size
+    vpSize: function() {
+      return {
+        w: $(window).width(),
+        h: $(window).height()
+      };
+    },
+
     // Given a color, figure out the best foreground color
     // for text
     makeFGColor: function(bg) {
@@ -36785,11 +37010,11 @@ define('minnpost-pvi-map-2014', [
     },
 
     // Ractive decorator for making a map
-    mapDecorator: function (node, shape) {
+    mapDecorator: function(node, shape) {
       var map, layer;
 
       // Add map
-      if (!_.isObject(map) && _.isObject(shape)) {
+      if (!_.isObject(map) && _.isObject(shape) && !this.get('sizeMedium')) {
         map = mpMaps.makeLeafletMap(node);
         map.removeControl(map.zoomControl);
         map.addControl(new L.Control.Zoom({ position: 'topright' }));
