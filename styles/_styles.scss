@@ -18,6 +18,11 @@ body .node-unpublished {
     padding-top: 3em;
   }
 
+  .filters {
+    margin-bottom: 2em;
+    text-align: center;
+  }
+
   table.arrangement {
     margin-bottom: 3em;
     width: auto;
@@ -45,6 +50,22 @@ body .node-unpublished {
         border: 2px solid #282828;
         border-radius: 3px;
       }
+
+      &.filtering.pvi-level-2,
+      &.filtering.pvi-level-3,
+      &.filtering.pvi-level-4,
+      &.filtering.pvi-level-5 {
+        opacity: 0.05;
+      }
+
+      &.filtering.pvi-level-1 {
+        border: 2px solid #7A7A7A;
+        border-radius: 3px;
+
+        &.active {
+          border: 2px solid #282828;
+        }
+      }
     }
 
     .place-labels td {
@@ -55,10 +76,11 @@ body .node-unpublished {
 
   .legend {
     text-align: center;
+    vertical-align: top;
 
     .legend-item {
       display: inline-block;
-      width: 8%;
+      width: 9%;
       padding: 2px;
 
       .legend-item-color {
@@ -68,7 +90,8 @@ body .node-unpublished {
 
       .legend-item-text {
         font-size: 0.75em;
-        line-height: 1.1em;
+        line-height: 1.25em;
+        vertical-align: top;
       }
     }
   }

@@ -144,7 +144,7 @@ define('minnpost-pvi-map-2014', [
         }
       });
 
-      // Handle events
+      // Handle select district
       this.mainView.on('selectDistrict', function(e, district) {
         e.original.preventDefault();
         var thisView = this;
@@ -161,6 +161,17 @@ define('minnpost-pvi-map-2014', [
             thisView.set('district', dPVI[district]);
           });
         }
+        // Hack around focus
+        $(e.node).blur();
+      });
+
+      // Handle filter
+      this.mainView.on('toggleCompetitive', function(e) {
+        e.original.preventDefault();
+        var current = this.get('filterCompetitive');
+        this.set('filterCompetitive', !current);
+        // Hack around focus
+        $(e.node).blur();
       });
     },
 

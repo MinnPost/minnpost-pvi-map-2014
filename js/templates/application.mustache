@@ -2,6 +2,17 @@
   <div class="message-container"></div>
 
   <div class="content-container">
+    <div class="filters">
+      <button on-tap="toggleCompetitive" class="button primary">
+        {{#filterCompetitive}}
+          Show all races
+        {{/filterCompetitive}}
+        {{^filterCompetitive}}
+          Show only competitive races
+        {{/filterCompetitive}}
+      </button>
+    </div>
+
     <div class="row">
       <div class="column-medium-66">
         <table class="arrangement">
@@ -15,6 +26,8 @@
                       class="grid
                         {{#(a[f.padLeft(ac) + f.padLeft(ar)])}}has-value{{/()}}
                         {{#(district['District'] === a[f.padLeft(ac) + f.padLeft(ar)])}}active{{/()}}
+                        {{#filterCompetitive}}filtering{{/filterCompetitive}}
+                        pvi-level-{{ p[a[f.padLeft(ac) + f.padLeft(ar)]].pviLevel }}
                       "
                       style="
                         background-color: {{ r(p[a[f.padLeft(ac) + f.padLeft(ar)]].PVI14).hex() }};
@@ -40,6 +53,13 @@
         </table>
 
         <div class="legend">
+          <div class="legend-item">
+            <div class="legend-item-color"></div>
+            <div class="legend-item-text">
+              <strong>PVI</strong>:<br>&nbsp;
+            </div>
+          </div>
+
           {{#rc:i}}
             <div class="legend-item">
               <div class="legend-item-color" style="background-color: {{ this }};"></div>
@@ -61,7 +81,7 @@
 
       <div class="column-medium-33">
         {{#(!district && !placeholderSeen)}}
-          <p class="details-placeholder small em">Click on a district to see PVI and candidate details.</p>
+          <p class="details-placeholder em">Click on a district to see <br> PVI and candidate details.</p>
         {{/()}}
         {{#district}}
           <div class="district-display" intro="fade" outro="fade">
@@ -114,8 +134,8 @@
                 {{#district.challengers:i}}
                   {{#(.party.toLowerCase() === district.pviParty)}}
                     The
-                    <span class="color-political-{{ .party.toLowerCase() }}">{{ .name }}</span>
-                    candidate {{ district.Incumbent}}
+                    <span class="color-political-{{ .party.toLowerCase() }}">{{ .party }}</span>
+                    candidate {{ .name }}
                   {{/()}}
                 {{/district.challengers:i}}
 
