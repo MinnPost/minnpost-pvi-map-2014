@@ -88,20 +88,20 @@
             <h3>District {{ f.removeLead(district['District']) }}</h3>
 
             <p>
-              With a PVI of <strong>{{ f.number(district['PVI14'], 1) }}</strong>,
+              With a PVI of <em>{{ f.number(district['PVI14'], 1) }}</em>,
               district {{ district['District'] }} is
 
-              <em>
+              <strong>
                 {{#(district.pviLevel === 1)}}slightly{{/()}}
                 {{#(district.pviLevel === 2)}}somewhat{{/()}}
                 {{#(district.pviLevel === 3)}}significantly{{/()}}
                 {{#(district.pviLevel === 4)}}very{{/()}}
-              </em>
 
-              <span class="color-political-{{ district.pviParty}}">
-                {{#(district.pviParty === 'dfl')}}DFL{{/()}}
-                {{#(district.pviParty === 'r')}}Republican{{/()}}
-              </span> leaning.
+                <span class="color-political-{{ district.pviParty}}">
+                  {{#(district.pviParty === 'dfl')}}DFL{{/()}}
+                  {{#(district.pviParty === 'r')}}Republican{{/()}}
+                </span> leaning.
+              </strong>
 
               {{#district.Incumbent}}
                 The
@@ -109,6 +109,8 @@
                   {{ district['Incumbent Party'] }}
                 </span>
                 incumbent {{ district.Incumbent}}
+
+                who won by a {{ f.number(Math.abs(district.margin12), 1) }} point margin in 2012
 
                 {{#(district.challengers.length === 0)}}
                   will almost certainly win with no challengers.
