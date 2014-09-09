@@ -19,7 +19,7 @@ body .node-unpublished {
   }
 
   .filters {
-    margin-bottom: 2em;
+    margin-bottom: 1em;
     text-align: center;
   }
 
@@ -51,19 +51,36 @@ body .node-unpublished {
         border-radius: 3px;
       }
 
-      &.filtering.pvi-level-2,
       &.filtering.pvi-level-3,
       &.filtering.pvi-level-4,
       &.filtering.pvi-level-5 {
-        opacity: 0.05;
+        opacity: 0.15;
       }
 
-      &.filtering.pvi-level-1 {
-        border: 2px solid #7A7A7A;
+      &.filtering.pvi-level-1,
+      &.filtering.pvi-level-2 {
+        border: 1px solid #FFFFFF;
         border-radius: 3px;
+        position: relative;
+
+        &:before {
+          content: " ";
+          position: absolute;
+          z-index: 1;
+          top: 0px;
+          left: 0px;
+          right: 0px;
+          bottom: 0px;
+          border: 2px solid #7A7A7A;
+          border-radius: 3px;
+        }
 
         &.active {
           border: 2px solid #282828;
+
+          &:before {
+            border: none;
+          }
         }
       }
     }
