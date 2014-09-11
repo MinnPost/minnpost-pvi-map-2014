@@ -10738,6 +10738,14 @@ return jQuery;
 
 define("jquery", function(){});
 
+/**
+ * An attempt to ensure that Require only uses the jQuery
+ * we want and not the one that is included on our site.
+ */
+define('jquery-noconflict',['jquery'], function($) {
+  return $.noConflict(true);
+});
+
 //     Underscore.js 1.6.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
