@@ -2,13 +2,13 @@
 
 Looking at new PVI analysis through cartogram map.
 
-You can see this project in action at *[published story link goes here]()*.
+You can see this project in action at **[Minnesota's most competitive House districts](http://www.minnpost.com/data/2014/09/minnesotas-most-competitive-house-districts)**.
 
 *Unless otherwise noted, MinnPost projects on [Github](https://github.com/minnpost) are story-driven and meant for transparency sake and not focused on re-use.  For a list of our more reusable projects, go to [code.minnpost.com](http://code.minnpost.com).*
 
 ## Data
 
-Data created manually and stored at `original/pvi-cartogram-data.csv`.  INSERT PVI EXPLANATION HERE.
+Data created manually and stored at `original/pvi-cartogram-data.csv`.  For an explanation on how the PVI was calculated, read the [MinnPost PVI explainer](http://www.minnpost.com/data/2014/09/how-minnpost-calculates-political-leans-house-districts).
 
 ## Development and running locally
 
