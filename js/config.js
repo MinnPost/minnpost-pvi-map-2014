@@ -3,6 +3,15 @@
  * any non-compliant libraries.
  */
 require.config({
+  // Hack around jQuery
+  map: {
+    '*': {
+      'jquery': 'jquery-noconflict'
+    },
+    'jquery-noconflict': {
+      'jquery': 'jquery'
+    }
+  },
   shim: {
 
   },
@@ -12,6 +21,7 @@ require.config({
     'almond': '../bower_components/almond/almond',
     'text': '../bower_components/text/text',
     'jquery': '../bower_components/jquery/dist/jquery',
+    'jquery-noconflict': 'build/jquery-noconflict',
     'underscore': '../bower_components/underscore/underscore',
     'ractive': '../bower_components/ractive/ractive-legacy',
     'ractive-events-tap': '../bower_components/ractive-events-tap/ractive-events-tap',
