@@ -8,7 +8,7 @@ You can see this project in action at **[Minnesota's most competitive House dist
 
 ## Data
 
-Data created manually and stored at `original/pvi-cartogram-data.csv`.  For an explanation on how the PVI was calculated, read the [MinnPost PVI explainer](http://www.minnpost.com/data/2014/09/how-minnpost-calculates-political-leans-house-districts).
+Data created manually and stored at `original/pvi-cartogram-data.csv`.  For an explanation on how the PVI was calculated, read the [MinnPost PVI explainer](http://www.minnpost.com/data/2014/09/how-minnpost-calculates-political-leans-house-districts).  Layout of cartogram was created with [aRanger](http://code.minnpost.com/aranger/#080996891df88333cf7c).
 
 ## Development and running locally
 
